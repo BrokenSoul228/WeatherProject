@@ -1,12 +1,9 @@
 package com.example.weatherappwithkotlin.adapter
 
-import android.content.Context
-import android.content.SharedPreferences
 import android.icu.text.SimpleDateFormat
 import android.os.Build
 import androidx.annotation.RequiresApi
 import androidx.fragment.app.FragmentActivity
-import androidx.preference.PreferenceManager
 import androidx.viewpager2.widget.ViewPager2
 import com.example.weatherappwithkotlin.customenum.WeatherConditionCollection
 import com.example.weatherappwithkotlin.customenum.WeatherIconCollection
@@ -15,7 +12,6 @@ import com.example.weatherappwithkotlin.dtoclass.ViewPagerListItem
 import com.example.weatherappwithkotlin.screen.fragment.DaysFragment
 import com.example.weatherappwithkotlin.screen.fragment.HoursFragment
 import java.util.*
-import kotlin.collections.ArrayList
 
 class RecyclerViewAdapter(private val forecastDTO: ForecastDTO) {
 

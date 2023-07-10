@@ -18,7 +18,7 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-        pref = getSharedPreferences("TABLE", Context.MODE_PRIVATE)
+
         if(isInternetAvailabel() == true){
             val fragment = MainScreen()
             supportFragmentManager.beginTransaction()
@@ -38,12 +38,6 @@ class MainActivity : AppCompatActivity() {
             val network = connectivityManager.activeNetwork
             val networkCapabilities = connectivityManager.getNetworkCapabilities(network)
             return networkCapabilities?.hasCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET)
-    }
-
-    fun saveData(res : Int){
-        val editor = pref?.edit()
-        editor?.putInt("counter", res)
-        editor?.apply()
     }
 
 }

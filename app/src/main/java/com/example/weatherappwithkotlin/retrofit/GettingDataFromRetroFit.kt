@@ -16,13 +16,17 @@ import androidx.fragment.app.FragmentActivity
 import androidx.viewpager2.widget.ViewPager2
 import com.example.weatherappwithkotlin.adapter.CurrentCardAdapter
 import com.example.weatherappwithkotlin.adapter.RecyclerViewAdapter
+import com.example.weatherappwithkotlin.customenum.ConditionWarning
+import com.example.weatherappwithkotlin.customenum.WeatherConditionCollection
 import com.example.weatherappwithkotlin.daoclass.city.CityDTO
 import com.example.weatherappwithkotlin.daoclass.forecast.ForecastDTO
+import com.example.weatherappwithkotlin.screen.MainScreen
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
+import java.util.Calendar
 
 const val BASE_URL_CITY = "https://geocoding-api.open-meteo.com/"
 const val BASE_URL_FORECAST = "https://api.open-meteo.com/"
@@ -64,7 +68,7 @@ class GettingDataFromRetroFit {
                     cityDTO = response.body()!!
                     if  (cityDTO.results.isEmpty()){
                         if (name.length >= 3)
-                        Toast.makeText(requiredContext, "Город не найден", Toast.LENGTH_LONG).show()
+                        Toast.makeText(requiredContext, "City not Found", Toast.LENGTH_LONG).show()
                     }
                     else {
                     val list = arrayListOf<String>()
@@ -92,9 +96,9 @@ class GettingDataFromRetroFit {
         requireActivity: FragmentActivity,
         viewPager: ViewPager2,
         listOfTextView: List<TextView>,
-        listOfImageView: List<ImageView>
+        listOfImageView: List<ImageView>,
+        mainScreen: MainScreen
     ) {
-
         val retroFitBuilder = Retrofit.Builder()
             .baseUrl(BASE_URL_CITY)
             .addConverterFactory(GsonConverterFactory.create())
@@ -108,15 +112,14 @@ class GettingDataFromRetroFit {
             override fun onResponse(call: Call<CityDTO>, response: Response<CityDTO>) {
                 if (response.isSuccessful) {
                     cityDTO = response.body()!!
-                    if(cityDTO.results.isNotEmpty()) {
-                        getInnerForecast(cityDTO, requireActivity, viewPager, listOfTextView, listOfImageView)
+                    if (cityDTO.results.isNotEmpty()) {
+                        getInnerForecast(cityDTO, requireActivity, viewPager, listOfTextView, listOfImageView, mainScreen)
                     }
                 }
             }
 
             override fun onFailure(call: Call<CityDTO>, t: Throwable) {
             }
-
         })
     }
 
@@ -125,7 +128,8 @@ class GettingDataFromRetroFit {
         requireActivity: FragmentActivity,
         viewPager: ViewPager2,
         listOfTextView: List<TextView>,
-        listOfImageView:List<ImageView>
+        listOfImageView:List<ImageView>,
+        mainScreen: MainScreen
     ) {
 
         val retroFitBuilder = Retrofit.Builder()
@@ -143,10 +147,37 @@ class GettingDataFromRetroFit {
                 if (response.isSuccessful) {
                     forecastDTO = response.body()!!
                     RecyclerViewAdapter(forecastDTO).fill(requireActivity, viewPager)
-                    CurrentCardAdapter(forecastDTO).fill(listOfTextView, cityDto.results[0].name, listOfImageView, requireActivity )
+                    CurrentCardAdapter(forecastDTO).fill(listOfTextView, cityDto.results[0].name, listOfImageView)
+
+                    for (index in forecastDTO.hourly.weathercode.indices) {
+                        var date = forecastDTO.hourly.time[index]
+                        var day = date.substring(8, 10)
+                        if (day.startsWith("0")) {
+                            day = day.substring(1)
+                        }
+                        var hour = date.substring(11, 13)
+                        if (hour.startsWith("0")) {
+                            hour = hour.substring(1)
+                        }
+
+                        val currentDay = Calendar.getInstance().get(Calendar.DAY_OF_MONTH)
+                        val currentHour = Calendar.getInstance().get(Calendar.HOUR_OF_DAY)
+
+                        if (day == currentDay.toString() && hour == currentHour.toString())
+                        {
+                            mainScreen.saveForecastData(cityDto.results[0].name,
+                                WeatherConditionCollection().getWeatherConditionByCode(forecastDTO.daily.weathercode[0]),
+                                forecastDTO.hourly.temperature_2m[index].toString(),
+                                forecastDTO.hourly.windspeed_10m[index].toString() + " km/h",
+                                forecastDTO.daily.temperature_2m_min[0].toString() + "°C / " + forecastDTO.daily.temperature_2m_max[0].toString() + "°C",
+                                forecastDTO.daily.time[0],
+                                ConditionWarning().getWeatherConditionWarning(forecastDTO.hourly.weathercode[0]))
+                        }
+                    }
+
+
                 }
             }
-
             override fun onFailure(call: Call<ForecastDTO>, t: Throwable) {
                 Log.e("API Error", "Error occurred while fetching city list", t)
             }

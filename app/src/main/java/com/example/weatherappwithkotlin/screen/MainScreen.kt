@@ -1,6 +1,7 @@
 
 package com.example.weatherappwithkotlin.screen
 
+import android.content.Context
 import android.content.SharedPreferences
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -8,7 +9,6 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ArrayAdapter
 import android.widget.AutoCompleteTextView
-import android.widget.ImageButton
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.constraintlayout.widget.ConstraintLayout
@@ -33,7 +33,7 @@ class MainScreen : Fragment() {
     private lateinit var viewPager: ViewPager2
     private lateinit var tabLayout : TabLayout
     private lateinit var viewPageAdapter : ViewPagerAdapter
-    private lateinit var sharedPref : SharedPreferences
+    private lateinit var sharedPref: SharedPreferences
 
     private lateinit var text1 : TextView
     private lateinit var text2 : TextView
@@ -69,12 +69,14 @@ class MainScreen : Fragment() {
             container,
             false
         )
+
         return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         initAllFragments()
+        loadForecastData()
         searchBar.doAfterTextChanged {
             GettingDataFromRetroFit().getCityList(
                 requireContext(),
@@ -90,10 +92,44 @@ class MainScreen : Fragment() {
                 requireActivity(),
                 viewPager,
                 listOf(text1, text2, text3, text4, text5, text6, text7),
-                listOf(image)
+                listOf(image),
+                this
             )
         }
     }
+
+    fun saveForecastData(cityName : String, condition : String, temp : String, windSpeed : String, maxMin : String, time : String, warning : String) {
+        sharedPref = requireActivity().getPreferences(Context.MODE_PRIVATE)
+        val editor = sharedPref.edit()
+        editor.putString("cityName", cityName)
+        editor.putString("condition", condition)
+        editor.putString("temp", temp)
+        editor.putString("windSpeed", windSpeed)
+        editor.putString("MaxMin", maxMin)
+        editor.putString("time", time)
+        editor.putString("warning", warning)
+        editor.apply()
+    }
+
+    private fun loadForecastData() {
+        sharedPref = requireActivity().getPreferences(Context.MODE_PRIVATE)
+        val cityName = sharedPref.getString("cityName", "")
+        val condition = sharedPref.getString("condition", "")
+        val temp = sharedPref.getString("temp", "")
+        val windSpeed = sharedPref.getString("windSpeed", "")
+        val maxMin = sharedPref.getString("maxMin", "")
+        val time = sharedPref.getString("time", "")
+        val warning = sharedPref.getString("warning", "")
+
+        text1.text = cityName
+        text2.text = temp
+        text3.text = condition
+        text4.text = windSpeed
+        text5.text = maxMin
+        text6.text = time
+        text7.text = warning
+    }
+
     private fun initAllFragments() {
         searchBar = binding.SearchBarPreviewText
         viewPager = binding.MainViewPager

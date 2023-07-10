@@ -12,11 +12,10 @@
         android:layout_height="wrap_content"
         android:alpha="0.90"
         android:contentDescription="@string/BackGroundDescription"
-        android:scaleType="fitXY"
+        android:scaleType="centerCrop"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/main_fragment_background"
         />
 
     <androidx.cardview.widget.CardView

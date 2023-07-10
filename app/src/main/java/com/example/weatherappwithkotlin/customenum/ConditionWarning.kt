@@ -1,7 +1,7 @@
 package com.example.weatherappwithkotlin.customenum
 
 class ConditionWarning {
-        fun getWeatherConditionWarning(countryCode : Int) : String? {
+        fun getWeatherConditionWarning(countryCode : Int) : String {
             return when (countryCode) {
                 45,48 -> "Аккуратней за рулем"
                 51 -> "Возьмите зонт"
@@ -18,7 +18,7 @@ class ConditionWarning {
                 77 -> "Возьмите зонт"
                 95 -> "Возьмите зонт"
                 96,99 -> "Возьмите зонт"
-                else -> null
+                else -> "Аккуратнее"
             }
         }
     }
