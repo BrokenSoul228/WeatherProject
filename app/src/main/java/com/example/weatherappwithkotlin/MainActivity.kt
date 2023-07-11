@@ -1,7 +1,6 @@
 package com.example.weatherappwithkotlin
 
 import android.content.Context
-import android.content.SharedPreferences
 import android.net.ConnectivityManager
 import android.net.NetworkCapabilities
 import android.os.Build
@@ -9,10 +8,9 @@ import android.os.Bundle
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import com.example.weatherappwithkotlin.screen.MainScreen
+import com.example.weatherappwithkotlin.screen.fragment.NoInternet
 
 class MainActivity : AppCompatActivity() {
-
-    var pref : SharedPreferences? = null
 
     @RequiresApi(Build.VERSION_CODES.M)
     override fun onCreate(savedInstanceState: Bundle?) {

@@ -1,4 +1,4 @@
-package com.example.weatherappwithkotlin.daoclass.city
+package com.example.weatherappwithkotlin.dao.city
 
 data class CityDTO(
     val generationtime_ms: Double = 0.0,

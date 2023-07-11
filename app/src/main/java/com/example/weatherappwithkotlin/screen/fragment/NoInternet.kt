@@ -1,4 +1,4 @@
-package com.example.weatherappwithkotlin
+package com.example.weatherappwithkotlin.screen.fragment
 
 import android.content.Context
 import android.net.ConnectivityManager
@@ -11,6 +11,7 @@ import android.view.ViewGroup
 import android.widget.Button
 import androidx.annotation.RequiresApi
 import androidx.fragment.app.Fragment
+import com.example.weatherappwithkotlin.R
 import com.example.weatherappwithkotlin.screen.MainScreen
 
 class NoInternet : Fragment() {

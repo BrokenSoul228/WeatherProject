@@ -9,7 +9,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.example.weatherappwithkotlin.adapter.ViewPagerListAdapter
 import com.example.weatherappwithkotlin.databinding.FragmentDaysBinding
-import com.example.weatherappwithkotlin.dtoclass.ViewPagerListItem
+import com.example.weatherappwithkotlin.dto.ViewPagerListItem
 
 
 class DaysFragment(list : List<ViewPagerListItem>) : Fragment() {

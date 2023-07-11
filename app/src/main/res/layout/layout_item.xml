@@ -49,6 +49,7 @@
             android:id="@+id/Temperature"
             android:layout_width="0dp"
             android:layout_height="0dp"
+            android:layout_marginStart="40dp"
             android:gravity="center"
             android:text="sdsadfasf"
             android:textColor="@color/white"

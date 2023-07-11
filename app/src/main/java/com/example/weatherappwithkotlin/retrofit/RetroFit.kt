@@ -1,7 +1,7 @@
 package com.example.weatherappwithkotlin.retrofit
 
-import com.example.weatherappwithkotlin.daoclass.city.CityDTO
-import com.example.weatherappwithkotlin.daoclass.forecast.ForecastDTO
+import com.example.weatherappwithkotlin.dao.city.CityDTO
+import com.example.weatherappwithkotlin.dao.forecast.ForecastDTO
 import retrofit2.Call
 import retrofit2.http.GET
 import retrofit2.http.Query

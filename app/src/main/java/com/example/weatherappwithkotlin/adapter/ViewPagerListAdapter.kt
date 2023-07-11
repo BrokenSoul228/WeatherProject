@@ -3,13 +3,14 @@ package com.example.weatherappwithkotlin.adapter
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.animation.AnimationUtils
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.example.weatherappwithkotlin.R
 import com.example.weatherappwithkotlin.databinding.LayoutItemBinding
-import com.example.weatherappwithkotlin.dtoclass.ViewPagerListItem
+import com.example.weatherappwithkotlin.dto.ViewPagerListItem
 
 class ViewPagerListAdapter : ListAdapter<ViewPagerListItem, ViewPagerListAdapter.LayoutItemHolder>(LayoutComparator()) {
 
@@ -46,6 +47,7 @@ class ViewPagerListAdapter : ListAdapter<ViewPagerListItem, ViewPagerListAdapter
     }
 
     override fun onBindViewHolder(holder: LayoutItemHolder, position: Int) {
+        holder.itemView.startAnimation(AnimationUtils.loadAnimation(holder.itemView.context, R.anim.anim_one))
         holder.fillItem(getItem(position))
     }
 }

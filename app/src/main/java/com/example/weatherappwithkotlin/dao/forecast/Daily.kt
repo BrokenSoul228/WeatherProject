@@ -1,4 +1,4 @@
-package com.example.weatherappwithkotlin.daoclass.forecast
+package com.example.weatherappwithkotlin.dao.forecast
 
 data class Daily(
     val temperature_2m_max: List<Double>,

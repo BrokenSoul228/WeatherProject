@@ -7,6 +7,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.inputmethod.InputMethodManager
 import android.widget.ArrayAdapter
 import android.widget.AutoCompleteTextView
 import android.widget.ImageView
@@ -92,9 +93,11 @@ class MainScreen : Fragment() {
                 requireActivity(),
                 viewPager,
                 listOf(text1, text2, text3, text4, text5, text6, text7),
-                listOf(image),
+                image,
                 this
             )
+            val intupDone = requireActivity().getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+            intupDone.hideSoftInputFromWindow(searchBar.windowToken, 0)
         }
     }
 

@@ -1,4 +1,4 @@
-package com.example.weatherappwithkotlin.daoclass
+package com.example.weatherappwithkotlin.dao
 
 data class WeatherData (
     val cityName : String,

@@ -14,12 +14,13 @@ import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.fragment.app.FragmentActivity
 import androidx.viewpager2.widget.ViewPager2
+import com.example.weatherappwithkotlin.R
 import com.example.weatherappwithkotlin.adapter.CurrentCardAdapter
 import com.example.weatherappwithkotlin.adapter.RecyclerViewAdapter
 import com.example.weatherappwithkotlin.customenum.ConditionWarning
 import com.example.weatherappwithkotlin.customenum.WeatherConditionCollection
-import com.example.weatherappwithkotlin.daoclass.city.CityDTO
-import com.example.weatherappwithkotlin.daoclass.forecast.ForecastDTO
+import com.example.weatherappwithkotlin.dao.city.CityDTO
+import com.example.weatherappwithkotlin.dao.forecast.ForecastDTO
 import com.example.weatherappwithkotlin.screen.MainScreen
 import retrofit2.Call
 import retrofit2.Callback
@@ -27,9 +28,7 @@ import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import java.util.Calendar
-
-const val BASE_URL_CITY = "https://geocoding-api.open-meteo.com/"
-const val BASE_URL_FORECAST = "https://api.open-meteo.com/"
+import kotlin.coroutines.coroutineContext
 
 class GettingDataFromRetroFit {
 
@@ -37,7 +36,9 @@ class GettingDataFromRetroFit {
     private var toast : Toast? = null
 
 
-    fun showToastWithDelay(context: Context, message: String, delayMillis: Long) {
+
+    fun showToastWithDelay(context: Context, message: String, delayMillis: Long)
+    {
         if (!toastShow) {
             toastShow = true
             toast = Toast.makeText(context, message, Toast.LENGTH_SHORT)
@@ -51,9 +52,9 @@ class GettingDataFromRetroFit {
     }
 
     fun getCityList(requiredContext: Context, name: String,  searchBar : AutoCompleteTextView) {
-
+        var cityURL = requiredContext.getString(R.string.CITY_URL)
         val retroFitBuilder = Retrofit.Builder()
-            .baseUrl(BASE_URL_CITY)
+            .baseUrl(cityURL)
             .addConverterFactory(GsonConverterFactory.create())
             .build()
 
@@ -96,11 +97,12 @@ class GettingDataFromRetroFit {
         requireActivity: FragmentActivity,
         viewPager: ViewPager2,
         listOfTextView: List<TextView>,
-        listOfImageView: List<ImageView>,
+        imageView: ImageView,
         mainScreen: MainScreen
     ) {
+        var cityURL = requireActivity.getString(R.string.CITY_URL)
         val retroFitBuilder = Retrofit.Builder()
-            .baseUrl(BASE_URL_CITY)
+            .baseUrl(cityURL)
             .addConverterFactory(GsonConverterFactory.create())
             .build()
 
@@ -113,7 +115,7 @@ class GettingDataFromRetroFit {
                 if (response.isSuccessful) {
                     cityDTO = response.body()!!
                     if (cityDTO.results.isNotEmpty()) {
-                        getInnerForecast(cityDTO, requireActivity, viewPager, listOfTextView, listOfImageView, mainScreen)
+                        getInnerForecast(cityDTO, requireActivity, viewPager, listOfTextView, imageView, mainScreen)
                     }
                 }
             }
@@ -128,12 +130,12 @@ class GettingDataFromRetroFit {
         requireActivity: FragmentActivity,
         viewPager: ViewPager2,
         listOfTextView: List<TextView>,
-        listOfImageView:List<ImageView>,
+        imageView: ImageView,
         mainScreen: MainScreen
     ) {
-
+        val forecastURL = requireActivity.getString(R.string.Forecast_URL)
         val retroFitBuilder = Retrofit.Builder()
-            .baseUrl(BASE_URL_FORECAST)
+            .baseUrl(forecastURL)
             .addConverterFactory(GsonConverterFactory.create())
             .build()
 
@@ -147,8 +149,7 @@ class GettingDataFromRetroFit {
                 if (response.isSuccessful) {
                     forecastDTO = response.body()!!
                     RecyclerViewAdapter(forecastDTO).fill(requireActivity, viewPager)
-                    CurrentCardAdapter(forecastDTO).fill(listOfTextView, cityDto.results[0].name, listOfImageView)
-
+                    CurrentCardAdapter(forecastDTO).fill(listOfTextView, cityDto.results[0].name, imageView)
                     for (index in forecastDTO.hourly.weathercode.indices) {
                         var date = forecastDTO.hourly.time[index]
                         var day = date.substring(8, 10)
@@ -174,8 +175,6 @@ class GettingDataFromRetroFit {
                                 ConditionWarning().getWeatherConditionWarning(forecastDTO.hourly.weathercode[0]))
                         }
                     }
-
-
                 }
             }
             override fun onFailure(call: Call<ForecastDTO>, t: Throwable) {

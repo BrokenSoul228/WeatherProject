@@ -7,8 +7,8 @@ import androidx.fragment.app.FragmentActivity
 import androidx.viewpager2.widget.ViewPager2
 import com.example.weatherappwithkotlin.customenum.WeatherConditionCollection
 import com.example.weatherappwithkotlin.customenum.WeatherIconCollection
-import com.example.weatherappwithkotlin.daoclass.forecast.ForecastDTO
-import com.example.weatherappwithkotlin.dtoclass.ViewPagerListItem
+import com.example.weatherappwithkotlin.dao.forecast.ForecastDTO
+import com.example.weatherappwithkotlin.dto.ViewPagerListItem
 import com.example.weatherappwithkotlin.screen.fragment.DaysFragment
 import com.example.weatherappwithkotlin.screen.fragment.HoursFragment
 import java.util.*

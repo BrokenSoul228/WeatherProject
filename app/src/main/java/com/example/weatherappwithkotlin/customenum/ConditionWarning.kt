@@ -3,7 +3,7 @@ package com.example.weatherappwithkotlin.customenum
 class ConditionWarning {
         fun getWeatherConditionWarning(countryCode : Int) : String {
             return when (countryCode) {
-                45,48 -> "Аккуратней за рулем"
+                45,48 -> Enu.Poka.toString()
                 51 -> "Возьмите зонт"
                 53 -> "Возьмите зонт"
                 55 -> "Возьмите зонт"
@@ -18,7 +18,10 @@ class ConditionWarning {
                 77 -> "Возьмите зонт"
                 95 -> "Возьмите зонт"
                 96,99 -> "Возьмите зонт"
-                else -> "Аккуратнее"
+                else -> "Погода хорошая"
             }
         }
+    enum class Enu(s : String){
+        Poka("poka")
+    }
     }

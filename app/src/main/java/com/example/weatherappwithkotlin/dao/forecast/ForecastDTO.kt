@@ -1,12 +1,10 @@
-package com.example.weatherappwithkotlin.daoclass.forecast
+package com.example.weatherappwithkotlin.dao.forecast
 
 data class ForecastDTO(
     val daily: Daily,
-    val daily_units: DailyUnits,
     val elevation: Double,
     val generationtime_ms: Double,
     val hourly: Hourly,
-    val hourly_units: HourlyUnits,
     val latitude: Double,
     val longitude: Double,
     val timezone: String,

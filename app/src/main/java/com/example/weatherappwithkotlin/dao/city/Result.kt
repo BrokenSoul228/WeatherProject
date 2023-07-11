@@ -1,4 +1,4 @@
-package com.example.weatherappwithkotlin.daoclass.city
+package com.example.weatherappwithkotlin.dao.city
 
 data class Result(
     val admin1: String,

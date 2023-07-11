@@ -8,15 +8,19 @@
 
     <ImageView
         android:id="@+id/BackgroundImage"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:adjustViewBounds="true"
         android:alpha="0.90"
         android:contentDescription="@string/BackGroundDescription"
-        android:scaleType="centerCrop"
+        android:scaleType="fitXY"
+        android:clickable="true"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        />
+        android:src="@drawable/asd"
+        android:focusable="true"
+        android:focusableInTouchMode="true"/>
 
     <androidx.cardview.widget.CardView
         android:id="@+id/InformationTable"
@@ -163,12 +167,12 @@
         android:id="@+id/MainViewPager"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        app:layout_constraintBottom_toBottomOf="@+id/BackgroundImage"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="@+id/ScreenSwitcher"
         app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="@+id/ScreenSwitcher"
         app:layout_constraintTop_toBottomOf="@+id/ScreenSwitcher"
-        app:layout_constraintVertical_bias="0.0"/>
+        app:layout_constraintVertical_bias="0.0" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

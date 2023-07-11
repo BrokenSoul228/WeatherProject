@@ -5,7 +5,7 @@ import com.example.weatherappwithkotlin.R
 class BackgroundCollection {
         fun getIconByWeatherCode(weatherCode : Int) : Int {
             return when (weatherCode) {
-                0 -> R.drawable.main_fragment_background
+                0 -> R.drawable.sunnycloudy
                 1 -> R.drawable.sunnycloudy
                 2 -> R.drawable.defaulticon
                 3 -> R.drawable.defaulticon

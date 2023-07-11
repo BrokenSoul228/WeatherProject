@@ -10,5 +10,7 @@
     <string name="SearchBar">Search</string>
     <string name="Hours">Hours</string>
     <string name="Days">Days</string>
+    <string name="CITY_URL">https://geocoding-api.open-meteo.com/</string>
+    <string name="Forecast_URL">https://api.open-meteo.com/</string>
     <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>

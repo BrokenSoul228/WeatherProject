@@ -1,4 +1,4 @@
-package com.example.weatherappwithkotlin.dtoclass
+package com.example.weatherappwithkotlin.dto
 
 data class ViewPagerListItem (
     val date: String,

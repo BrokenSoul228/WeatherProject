@@ -1,17 +1,13 @@
 package com.example.weatherappwithkotlin.adapter
 
 import android.annotation.SuppressLint
-import android.content.SharedPreferences
 import android.widget.ImageView
 import android.widget.TextView
-import androidx.fragment.app.FragmentActivity
-import androidx.preference.PreferenceManager
+import com.example.weatherappwithkotlin.R
 import com.example.weatherappwithkotlin.customenum.BackgroundCollection
 import com.example.weatherappwithkotlin.customenum.ConditionWarning
 import com.example.weatherappwithkotlin.customenum.WeatherConditionCollection
-import com.example.weatherappwithkotlin.customenum.WeatherIconCollection
-import com.example.weatherappwithkotlin.daoclass.forecast.ForecastDTO
-import com.squareup.picasso.Picasso
+import com.example.weatherappwithkotlin.dao.forecast.ForecastDTO
 import java.util.*
 
 class CurrentCardAdapter(private var forecastDTO: ForecastDTO) {
@@ -20,7 +16,7 @@ class CurrentCardAdapter(private var forecastDTO: ForecastDTO) {
     fun fill(
         list: List<TextView>,
         name: String,
-        listImage: List<ImageView>,
+        imageView: ImageView,
     ) {
         val currentDay = Calendar.getInstance().get(Calendar.DAY_OF_MONTH)
         val currentHour = Calendar.getInstance().get(Calendar.HOUR_OF_DAY)
@@ -45,8 +41,6 @@ class CurrentCardAdapter(private var forecastDTO: ForecastDTO) {
         list[4].text = forecastDTO.daily.temperature_2m_min[0].toString() + "°C / " + forecastDTO.daily.temperature_2m_max[0].toString() + "°C"
         list[5].text = forecastDTO.daily.time[0]
         list[6].text = ConditionWarning().getWeatherConditionWarning(forecastDTO.hourly.weathercode[0])
-
-        val iconUrl = BackgroundCollection().getIconByWeatherCode(forecastDTO.hourly.weathercode[0])
-        Picasso.get().load(iconUrl).into(listImage[0])
+        imageView.setImageResource(BackgroundCollection().getIconByWeatherCode(forecastDTO.hourly.weathercode[0]))
     }
 }
