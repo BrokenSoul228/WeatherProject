@@ -4,24 +4,35 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".screen.fragment.NoInternet">
+    tools:context=".screen.fragment.NoInternetConnection">
 
     <ImageView
         android:id="@+id/imageView"
         android:layout_width="292dp"
         android:layout_height="283dp"
-        android:src="@mipmap/dead_internet"
+        android:src="@drawable/wifi_signal"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         tools:ignore="MissingConstraints"
         tools:layout_editor_absoluteY="178dp" />
 
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="No internet connection"
+        android:textSize="34dp"
+        app:layout_constraintBottom_toTopOf="@+id/imageView"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+    </TextView>
+
     <Button
         android:id="@+id/RetryButton"
         android:layout_width="148dp"
         android:layout_height="56dp"
-        android:backgroundTint="@color/blue"
-        android:text="Retry to connect"
+        android:backgroundTint="#7A8AEC"
+        android:text="Retry to reconnect"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"

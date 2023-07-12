@@ -8,7 +8,7 @@ import android.os.Bundle
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import com.example.weatherappwithkotlin.screen.MainScreen
-import com.example.weatherappwithkotlin.screen.fragment.NoInternet
+import com.example.weatherappwithkotlin.screen.fragment.NoInternetConnection
 
 class MainActivity : AppCompatActivity() {
 
@@ -24,7 +24,7 @@ class MainActivity : AppCompatActivity() {
                 .commit()
         }
         else{
-            val fragment = NoInternet()
+            val fragment = NoInternetConnection()
             supportFragmentManager.beginTransaction()
                 .replace(R.id.MainScreenSwitcher, fragment)
                 .commit()

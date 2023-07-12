@@ -1,6 +1,7 @@
 
 package com.example.weatherappwithkotlin.screen
 
+import GettingDataFromRetrofit
 import android.content.Context
 import android.content.SharedPreferences
 import android.os.Bundle
@@ -20,7 +21,6 @@ import androidx.viewpager2.widget.ViewPager2
 import com.example.weatherappwithkotlin.adapter.ViewPagerAdapter
 import com.example.weatherappwithkotlin.databinding.ActivityMainScreenBinding
 import com.example.weatherappwithkotlin.databinding.SearchbarLayoutItemBinding
-import com.example.weatherappwithkotlin.retrofit.GettingDataFromRetroFit
 import com.example.weatherappwithkotlin.screen.fragment.DaysFragment
 import com.example.weatherappwithkotlin.screen.fragment.HoursFragment
 import com.google.android.material.tabs.TabLayout
@@ -35,6 +35,7 @@ class MainScreen : Fragment() {
     private lateinit var tabLayout : TabLayout
     private lateinit var viewPageAdapter : ViewPagerAdapter
     private lateinit var sharedPref: SharedPreferences
+    private lateinit var retrofitHelper : GettingDataFromRetrofit
 
     private lateinit var text1 : TextView
     private lateinit var text2 : TextView
@@ -78,8 +79,9 @@ class MainScreen : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         initAllFragments()
         loadForecastData()
+        retrofitHelper = GettingDataFromRetrofit.getInstance()
         searchBar.doAfterTextChanged {
-            GettingDataFromRetroFit().getCityList(
+            retrofitHelper.getCityList(
                 requireContext(),
                 searchBar.text.toString(),
                 searchBar
@@ -88,7 +90,7 @@ class MainScreen : Fragment() {
 
         searchBar.setOnItemClickListener { parent, view, position, id ->
             val selectedCity = parent.getItemAtPosition(position)
-            GettingDataFromRetroFit().getForecast(
+            retrofitHelper.getForecast(
                 selectedCity.toString(),
                 requireActivity(),
                 viewPager,

@@ -1,5 +1,3 @@
-package com.example.weatherappwithkotlin.retrofit
-
 import android.annotation.SuppressLint
 import android.content.Context
 import android.os.Build
@@ -14,12 +12,13 @@ import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.fragment.app.FragmentActivity
 import androidx.viewpager2.widget.ViewPager2
-import com.example.weatherappwithkotlin.R
 import com.example.weatherappwithkotlin.adapter.CurrentCardAdapter
 import com.example.weatherappwithkotlin.adapter.RecyclerViewAdapter
-import com.example.weatherappwithkotlin.customenum.ConditionWarning
+import com.example.weatherappwithkotlin.customenum.ConditionWarning.Companion.getWeatherConditionWarning
+import com.example.weatherappwithkotlin.customenum.ConditionWarning.Forecast.Companion.getForecastCondition
 import com.example.weatherappwithkotlin.dao.city.CityDTO
 import com.example.weatherappwithkotlin.dao.forecast.ForecastDTO
+import com.example.weatherappwithkotlin.retrofit.RetroFit
 import com.example.weatherappwithkotlin.screen.MainScreen
 import retrofit2.Call
 import retrofit2.Callback
@@ -28,15 +27,31 @@ import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import java.util.Calendar
 
-class GettingDataFromRetroFit {
+class GettingDataFromRetrofit private constructor() {
 
-    private var toastShow : Boolean = false
-    private var toast : Toast? = null
+    private var toastShow: Boolean = false
+    private var toast: Toast? = null
+    private val retrofitCityBuilder = Retrofit.Builder()
+        .baseUrl("https://geocoding-api.open-meteo.com/")
+        .addConverterFactory(GsonConverterFactory.create())
+        .build()
+    private val retrofitForecastBuilder = Retrofit.Builder()
+        .baseUrl("https://api.open-meteo.com/")
+        .addConverterFactory(GsonConverterFactory.create())
+        .build()
+    private val retrofitCity = retrofitCityBuilder.create(RetroFit::class.java)
+    private val retrofitForecast = retrofitForecastBuilder.create(RetroFit::class.java)
 
+    companion object {
+        @Volatile
+        private var instance: GettingDataFromRetrofit? = null
+        fun getInstance(): GettingDataFromRetrofit =
+            instance ?: synchronized(this) {
+                instance ?: GettingDataFromRetrofit().also { instance = it }
+            }
+    }
 
-
-    fun showToastWithDelay(context: Context, message: String, delayMillis: Long)
-    {
+    fun showToastWithDelay(context: Context, message: String, delayMillis: Long) {
         if (!toastShow) {
             toastShow = true
             toast = Toast.makeText(context, message, Toast.LENGTH_SHORT)
@@ -49,44 +64,45 @@ class GettingDataFromRetroFit {
         }
     }
 
-    fun getCityList(requiredContext: Context, name: String,  searchBar : AutoCompleteTextView) {
-        var cityURL = requiredContext.getString(R.string.CITY_URL)
-        val retroFitBuilder = Retrofit.Builder()
-            .baseUrl(cityURL)
-            .addConverterFactory(GsonConverterFactory.create())
-            .build()
-
-        val retroFit = retroFitBuilder.create(RetroFit::class.java)
-        val json = retroFit.getCityJson(name)
-        var cityDTO : CityDTO
+    fun getCityList(
+        requiredContext: Context,
+        name: String,
+        searchBar: AutoCompleteTextView
+    ) {
+        val json = retrofitCity.getCityJson(name)
+        var cityDTO: CityDTO
 
         json.enqueue(object : Callback<CityDTO> {
             @SuppressLint("SuspiciousIndentation")
             override fun onResponse(call: Call<CityDTO>, response: Response<CityDTO>) {
                 if (response.isSuccessful) {
                     cityDTO = response.body()!!
-                    if  (cityDTO.results.isEmpty()){
+                    if (cityDTO.results.isEmpty()) {
                         if (name.length >= 3)
-                        Toast.makeText(requiredContext, "City not Found", Toast.LENGTH_LONG).show()
-                    }
-                    else {
-                    val list = arrayListOf<String>()
-                    for (item in cityDTO.results) {
-                        list.add(item.name)
-                        if(list.size > 5) {
-                            break
+                            Toast.makeText(requiredContext, "City not Found", Toast.LENGTH_LONG).show()
+                    } else {
+                        val list = arrayListOf<String>()
+                        for (item in cityDTO.results) {
+                            list.add(item.name)
+                            if (list.size > 5) {
+                                break
+                            }
                         }
+                        searchBar.setAdapter(
+                            ArrayAdapter(
+                                requiredContext,
+                        androidx.appcompat.R.layout.support_simple_spinner_dropdown_item,
+                        list
+                        )
+                        )
+                        Log.d("INFO", cityDTO.toString())
                     }
-                    searchBar.setAdapter(ArrayAdapter(requiredContext, androidx.appcompat.R.layout.support_simple_spinner_dropdown_item, list))
-                    Log.d("INFO", cityDTO.toString())
                 }
             }
-        }
 
             override fun onFailure(call: Call<CityDTO>, t: Throwable) {
-                showToastWithDelay(requiredContext, message = "Internet problem" , 1000)
+                showToastWithDelay(requiredContext, message = "Internet problem", 1000)
             }
-
         })
     }
 
@@ -98,14 +114,7 @@ class GettingDataFromRetroFit {
         imageView: ImageView,
         mainScreen: MainScreen
     ) {
-        var cityURL = requireActivity.getString(R.string.CITY_URL)
-        val retroFitBuilder = Retrofit.Builder()
-            .baseUrl(cityURL)
-            .addConverterFactory(GsonConverterFactory.create())
-            .build()
-
-        val retroFit = retroFitBuilder.create(RetroFit::class.java)
-        val json = retroFit.getCityJson(text)
+        val json = retrofitCity.getCityJson(text)
         var cityDTO: CityDTO
 
         json.enqueue(object : Callback<CityDTO> {
@@ -113,7 +122,14 @@ class GettingDataFromRetroFit {
                 if (response.isSuccessful) {
                     cityDTO = response.body()!!
                     if (cityDTO.results.isNotEmpty()) {
-                        getInnerForecast(cityDTO, requireActivity, viewPager, listOfTextView, imageView, mainScreen)
+                        getInnerForecast(
+                            cityDTO,
+                            requireActivity,
+                            viewPager,
+                            listOfTextView,
+                            imageView,
+                            mainScreen
+                        )
                     }
                 }
             }
@@ -131,15 +147,8 @@ class GettingDataFromRetroFit {
         imageView: ImageView,
         mainScreen: MainScreen
     ) {
-        val forecastURL = requireActivity.getString(R.string.Forecast_URL)
-        val retroFitBuilder = Retrofit.Builder()
-            .baseUrl(forecastURL)
-            .addConverterFactory(GsonConverterFactory.create())
-            .build()
-
-        val retroFit = retroFitBuilder.create(RetroFit::class.java)
-        val json = retroFit.getForecastJson(cityDto.results[0].latitude, cityDto.results[0].longitude)
-        var forecastDTO : ForecastDTO
+        val json = retrofitForecast.getForecastJson(cityDto.results[0].latitude, cityDto.results[0].longitude)
+        var forecastDTO: ForecastDTO
 
         json.enqueue(object : Callback<ForecastDTO> {
             @RequiresApi(Build.VERSION_CODES.N)
@@ -147,8 +156,12 @@ class GettingDataFromRetroFit {
                 if (response.isSuccessful) {
                     forecastDTO = response.body()!!
                     RecyclerViewAdapter(forecastDTO).fill(requireActivity, viewPager)
-                    CurrentCardAdapter(forecastDTO).fill(listOfTextView, cityDto.results[0].name, imageView)
-                    for (index in forecastDTO.hourly.weatherCode.indices) {
+                    CurrentCardAdapter(forecastDTO).fill(
+                        listOfTextView,
+                        cityDto.results[0].name,
+                        imageView
+                    )
+                    for (index in forecastDTO.hourly.weathercode.indices) {
                         var date = forecastDTO.hourly.time[index]
                         var day = date.substring(8, 10)
                         if (day.startsWith("0")) {
@@ -158,23 +171,25 @@ class GettingDataFromRetroFit {
                         if (hour.startsWith("0")) {
                             hour = hour.substring(1)
                         }
-
                         val currentDay = Calendar.getInstance().get(Calendar.DAY_OF_MONTH)
                         val currentHour = Calendar.getInstance().get(Calendar.HOUR_OF_DAY)
 
-                        if (day == currentDay.toString() && hour == currentHour.toString())
-                        {
-                            mainScreen.saveForecastData(cityDto.results[0].name,
-                                ConditionWarning().getWeatherConditionByCode(forecastDTO.daily.weatherCode[0]),
-                                forecastDTO.hourly.temperature[index].toString(),
-                                forecastDTO.hourly.windSpeed[index].toString() + " km/h",
-                                forecastDTO.daily.temperatureMin[0].toString() + "°C / " + forecastDTO.daily.temperatureMax[0].toString() + "°C",
-                                forecastDTO.daily.time[0],
-                                ConditionWarning().getWeatherConditionWarning(forecastDTO.hourly.weatherCode[0]))
+                        if (day == currentDay.toString() && hour == currentHour.toString()) {
+                            mainScreen.saveForecastData(
+                                cityDto.results[0].name,
+                                getForecastCondition(forecastDTO.daily.weathercode[0]),
+                                forecastDTO.hourly.temperature_2m[index].toString(),
+                                forecastDTO.hourly.windspeed_10m[index].toString() + " km/h",
+                                forecastDTO.daily.temperature_2m_min[0].toString() + "°C / " + forecastDTO.daily.temperature_2m_max[0].toString() + "°C",
+
+                            forecastDTO.daily.time[0],
+                            getWeatherConditionWarning(forecastDTO.hourly.weathercode[0])
+                            )
                         }
                     }
                 }
             }
+
             override fun onFailure(call: Call<ForecastDTO>, t: Throwable) {
                 Log.e("API Error", "Error occurred while fetching city list", t)
             }

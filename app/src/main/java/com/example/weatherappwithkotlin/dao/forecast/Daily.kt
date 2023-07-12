@@ -1,8 +1,8 @@
 package com.example.weatherappwithkotlin.dao.forecast
 
 data class Daily(
-    val temperatureMax: List<Double>,
-    val temperatureMin: List<Double>,
+    val temperature_2m_max : List<Double>,
+    val temperature_2m_min: List<Double>,
     val time: List<String>,
-    val weatherCode: List<Int>
+    val weathercode: List<Int>
 )

@@ -14,7 +14,7 @@ import androidx.fragment.app.Fragment
 import com.example.weatherappwithkotlin.R
 import com.example.weatherappwithkotlin.screen.MainScreen
 
-class NoInternet : Fragment() {
+class NoInternetConnection : Fragment() {
     @RequiresApi(Build.VERSION_CODES.M)
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -26,7 +26,7 @@ class NoInternet : Fragment() {
             if (isInternetAvailabel() == true){
             val fragment = MainScreen()
             val transaction = requireActivity().supportFragmentManager.beginTransaction()
-            transaction.remove(this@NoInternet)
+            transaction.remove(this@NoInternetConnection)
             transaction.replace(R.id.nav_container, fragment).commit()
             }
         }

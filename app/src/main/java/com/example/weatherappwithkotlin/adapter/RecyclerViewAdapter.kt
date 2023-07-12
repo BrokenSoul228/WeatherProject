@@ -2,10 +2,12 @@ package com.example.weatherappwithkotlin.adapter
 
 import android.icu.text.SimpleDateFormat
 import android.os.Build
+import android.util.Log
 import androidx.annotation.RequiresApi
 import androidx.fragment.app.FragmentActivity
 import androidx.viewpager2.widget.ViewPager2
-import com.example.weatherappwithkotlin.customenum.ConditionWarning
+import com.example.weatherappwithkotlin.customenum.ConditionWarning.Forecast.Companion.getForecastCondition
+import com.example.weatherappwithkotlin.customenum.ConditionWarning.IconCollection.Companion.getIconCondition
 import com.example.weatherappwithkotlin.dao.forecast.ForecastDTO
 import com.example.weatherappwithkotlin.dto.ViewPagerListItem
 import com.example.weatherappwithkotlin.screen.fragment.DaysFragment
@@ -21,31 +23,32 @@ class RecyclerViewAdapter(private val forecastDTO: ForecastDTO) {
         val daysList = ArrayList<ViewPagerListItem>()
         val currentHour = Calendar.getInstance().get(Calendar.HOUR_OF_DAY)
         val currentCalendar = Calendar.getInstance()
-
-        for (index in forecastDTO.hourly.weatherCode.indices) {
+        Log.d("ALLLOOO", hoursList.toString())
+        for (index in forecastDTO.hourly.weathercode.indices) {
             val timeString = forecastDTO.hourly.time[index]
             val hour = parseHourFromTimeString(timeString)
             val dataTime = parseDayIsCurrent(timeString)
             val formattedTime = formatHourMinute(hour)
+
             if (isHourInCurrentDay(hour) && hour <= 23 && hour >= currentCalendar.get(Calendar.HOUR_OF_DAY) && currentHour < 23 && dataTime <= currentCalendar.get(Calendar.DAY_OF_MONTH)) {
                 hoursList.add(
                     ViewPagerListItem(
                         formattedTime,
-                        ConditionWarning().getWeatherConditionByCode(forecastDTO.hourly.weatherCode[index]),
-                        forecastDTO.hourly.temperature[index].toString() + "°C",
-                        ConditionWarning().getIconByWeatherCode(forecastDTO.hourly.weatherCode[index])
+                        getForecastCondition(forecastDTO.hourly.weathercode[index]),
+                        forecastDTO.hourly.temperature_2m[index].toString() + "°C",
+                        getIconCondition(forecastDTO.hourly.weathercode[index])
                     )
                 )
             }
         }
 
-        for (index in forecastDTO.daily.weatherCode.indices) {
+        for (index in forecastDTO.daily.weathercode.indices) {
             daysList.add(
                 ViewPagerListItem(
                     forecastDTO.daily.time[index],
-                    ConditionWarning().getWeatherConditionByCode(forecastDTO.daily.weatherCode[index]),
-                    forecastDTO.daily.temperatureMin[index].toString() + "°C / " + forecastDTO.daily.temperatureMax[index].toString() + "°C",
-                    ConditionWarning().getIconByWeatherCode(forecastDTO.daily.weatherCode[index])
+                    getForecastCondition(forecastDTO.daily.weathercode[index]),
+                    forecastDTO.daily.temperature_2m_min[index].toString() + "°C / " + forecastDTO.daily.temperature_2m_max[index].toString() + "°C",
+                    getIconCondition(forecastDTO.daily.weathercode[index])
                 )
             )
         }
@@ -88,6 +91,4 @@ class RecyclerViewAdapter(private val forecastDTO: ForecastDTO) {
         calendar.time = date
         return calendar.get(Calendar.DAY_OF_MONTH)
     }
-
-
 }
