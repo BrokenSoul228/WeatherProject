@@ -27,7 +27,6 @@ import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import java.util.Calendar
-import kotlin.coroutines.coroutineContext
 
 class GettingDataFromRetroFit {
 
@@ -149,7 +148,7 @@ class GettingDataFromRetroFit {
                     forecastDTO = response.body()!!
                     RecyclerViewAdapter(forecastDTO).fill(requireActivity, viewPager)
                     CurrentCardAdapter(forecastDTO).fill(listOfTextView, cityDto.results[0].name, imageView)
-                    for (index in forecastDTO.hourly.weathercode.indices) {
+                    for (index in forecastDTO.hourly.weatherCode.indices) {
                         var date = forecastDTO.hourly.time[index]
                         var day = date.substring(8, 10)
                         if (day.startsWith("0")) {
@@ -166,12 +165,12 @@ class GettingDataFromRetroFit {
                         if (day == currentDay.toString() && hour == currentHour.toString())
                         {
                             mainScreen.saveForecastData(cityDto.results[0].name,
-                                ConditionWarning().getWeatherConditionByCode(forecastDTO.daily.weathercode[0]),
-                                forecastDTO.hourly.temperature_2m[index].toString(),
-                                forecastDTO.hourly.windspeed_10m[index].toString() + " km/h",
-                                forecastDTO.daily.temperature_2m_min[0].toString() + "°C / " + forecastDTO.daily.temperature_2m_max[0].toString() + "°C",
+                                ConditionWarning().getWeatherConditionByCode(forecastDTO.daily.weatherCode[0]),
+                                forecastDTO.hourly.temperature[index].toString(),
+                                forecastDTO.hourly.windSpeed[index].toString() + " km/h",
+                                forecastDTO.daily.temperatureMin[0].toString() + "°C / " + forecastDTO.daily.temperatureMax[0].toString() + "°C",
                                 forecastDTO.daily.time[0],
-                                ConditionWarning().getWeatherConditionWarning(forecastDTO.hourly.weathercode[0]))
+                                ConditionWarning().getWeatherConditionWarning(forecastDTO.hourly.weatherCode[0]))
                         }
                     }
                 }

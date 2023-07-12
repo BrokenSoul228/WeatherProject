@@ -2,64 +2,62 @@ package com.example.weatherappwithkotlin.customenum
 
 import com.example.weatherappwithkotlin.R
 
-enum class ConditionWarning (code : Int , s : String){
-    WarningFog(45 ,"Warning Fog"),
-    WarningFog2(46 ,"Warning Fog"),
-    Umbrella("Take an umbrella"),
-    WarningDrizzle("Warning Drizzle"),
-    Dress("Dress warmly"),
-    Clear("Clear") ,
-    PartlyClear("Partly clear"),
-    PartlyCloudy("Partly cloudy"),
-    MainlyCloudy("Mainly cloudy"),
-    Fog("Fog"),
-    LittleDrizzle("Little Drizzle"),
-    ModerateDrizzle("Moderate Drizzle"),
-    PowerDrizzle("Powerful Drizzle"),
-    LittleRain("Little Rain"),
-    ModerateRain("Moderate Rain"),
-    PowerfulRain("Powerful Rain"),
-    FreezingRain("Freezing Rain"),
-    LitlleSnow("Little Snowfall"),
-    ModerateSnow("Moderate Snowfall"),
-    PowerfulSnow("Powerful Snowfall"),
-    Hail("Hail"),
-    Thunder("Thunder"),
-    HailThunder("Thunder with hail");
+enum class ConditionWarning(code: List<Int>){
+    WARNING_FOG(45,46),
+    UMBRELLA(51,53,55,61,80,63,81,65,82,66,67,77,95,96,99),
+    WARNING_DRIZZLE(56),
+    DRESS(listOf(56,57,71,85,75,86,73),
 
-        fun getWeatherConditionWarning(countryCode : Int) : String {
-            return when (countryCode) {
-                45,48 -> Enu.WarningFog.toString()
-                51,53,55,61,80,63,81,65,82,66,67,77,95,96,99 -> Enu.Umbrella.toString()
-                56,57 -> Enu.WarningDrizzle.toString()
-                71,85 -> Enu.Dress.toString()
-                73 -> Enu.Dress.toString()
-                75,86 -> Enu.Dress.toString()
+    CLEAR(listOf(0), "Clear"),
+    PARTLY_CLEAR(listOf(1), "Partly clear"),
+    PARTLY_CLOUDY(listOf(2), "Partly cloudy"),
+    MAINLY_CLOUDY(listOf(3), "Mainly cloudy"),
+    FOG(listOf(45,48), "Fog"),
+    LITTLE_DRIZZLE(listOf(51,56,57), "Little Drizzle"),
+    MODERATE_DRIZZLE(listOf(53), "Moderate Drizzle"),
+    POWER_DRIZZLE(listOf(55), "Powerful Drizzle"),
+    LITTLE_RAIN(listOf(61,80), "Little Rain"),
+    MODERATE_RAIN(listOf(63,81), "Moderate Rain"),
+    POWERFUL_RAIN(listOf(5,82), "Powerful Rain"),
+    FREEZING_RAIN(listOf(66,67), "Freezing Rain"),
+    LITTLE_SNOW(listOf(71,85), "Little Snowfall"),
+    MODERATE_SNOW(listOf(73), "Moderate Snowfall"),
+    POWERFUL_SNOW(listOf(75,86), "Powerful Snowfall"),
+    HAIL(listOf(77), "Hail"),
+    THUNDER(listOf(95), "Thunder"),
+    HAIL_THUNDER(listOf(96,99), "Thunder with hail");
+
+        fun getWeatherConditionWarning(code: Int) : String {
+            return when (code) {
+                in listOf(45,46) -> WARNING_FOG.toString()
+                in listOf(51,53,55,61,80,63,81,65,82,66,67,77,95,96,99) -> UMBRELLA.toString()
+                in listOf(56) -> WARNING_DRIZZLE.toString()
+                in listOf(56,57,71,85,75,86,73) -> DRESS.toString()
                 else -> "Good weather"
             }
         }
 
     fun getWeatherConditionByCode(countryCode : Int) : String {
         return when (countryCode) {
-            0 -> Enu.Clear.toString()
-            1 -> Enu.PartlyClear.toString()
-            2 -> Enu.PartlyCloudy.toString()
-            3 -> Enu.MainlyCloudy.toString()
-            45,48 -> Enu.Fog.toString()
-            51 -> Enu.LittleDrizzle.toString()
-            53 -> Enu.ModerateDrizzle.toString()
-            55 -> Enu.PowerDrizzle.toString()
-            56,57 -> Enu.LittleDrizzle.toString()
-            61,80 -> Enu.LittleRain.toString()
-            63,81 -> Enu.ModerateRain.toString()
-            65,82 -> Enu.PowerfulRain.toString()
-            66,67 -> Enu.FreezingRain.toString()
-            71,85 -> Enu.LitlleSnow.toString()
-            73 -> Enu.ModerateSnow.toString()
-            75,86 -> Enu.PowerfulSnow.toString()
-            77 -> Enu.Hail.toString()
-            95 -> Enu.Thunder.toString()
-            96,99 -> Enu.HailThunder.toString()
+            in listOf(0) -> CLEAR.toString()
+            in listOf(1) ->PARTLY_CLEAR.toString()
+            in listOf(2) -> PARTLY_CLOUDY.toString()
+            in listOf(3) -> MAINLY_CLOUDY.toString()
+            in listOf(45,48) -> FOG.toString()
+            in listOf(51) -> LITTLE_DRIZZLE.toString()
+            in listOf(53) -> MODERATE_DRIZZLE.toString()
+            in listOf(55) -> POWER_DRIZZLE.toString()
+            in listOf(56,57) -> LITTLE_DRIZZLE.toString()
+            in listOf(61,80) -> LITTLE_RAIN.toString()
+            in listOf(63,81) -> MODERATE_RAIN.toString()
+            in listOf(65,82) -> POWERFUL_RAIN.toString()
+            in listOf(66,67) -> FREEZING_RAIN.toString()
+            in listOf(71,85) -> LITTLE_SNOW.toString()
+            in listOf(73) -> MODERATE_SNOW.toString()
+            in listOf(75,86) -> POWERFUL_SNOW.toString()
+            in listOf(77) -> HAIL.toString()
+            in listOf(95) -> THUNDER.toString()
+            in listOf(96,99) -> HAIL_THUNDER.toString()
             else -> "No information"
         }
     }
@@ -113,5 +111,4 @@ enum class ConditionWarning (code : Int , s : String){
             else -> R.drawable.verycloudy
         }
     }
-
-    }
+}
