@@ -18,7 +18,6 @@ import com.example.weatherappwithkotlin.R
 import com.example.weatherappwithkotlin.adapter.CurrentCardAdapter
 import com.example.weatherappwithkotlin.adapter.RecyclerViewAdapter
 import com.example.weatherappwithkotlin.customenum.ConditionWarning
-import com.example.weatherappwithkotlin.customenum.WeatherConditionCollection
 import com.example.weatherappwithkotlin.dao.city.CityDTO
 import com.example.weatherappwithkotlin.dao.forecast.ForecastDTO
 import com.example.weatherappwithkotlin.screen.MainScreen
@@ -167,7 +166,7 @@ class GettingDataFromRetroFit {
                         if (day == currentDay.toString() && hour == currentHour.toString())
                         {
                             mainScreen.saveForecastData(cityDto.results[0].name,
-                                WeatherConditionCollection().getWeatherConditionByCode(forecastDTO.daily.weathercode[0]),
+                                ConditionWarning().getWeatherConditionByCode(forecastDTO.daily.weathercode[0]),
                                 forecastDTO.hourly.temperature_2m[index].toString(),
                                 forecastDTO.hourly.windspeed_10m[index].toString() + " km/h",
                                 forecastDTO.daily.temperature_2m_min[0].toString() + "°C / " + forecastDTO.daily.temperature_2m_max[0].toString() + "°C",

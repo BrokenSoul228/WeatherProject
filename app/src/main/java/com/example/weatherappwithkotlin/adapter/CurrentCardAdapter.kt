@@ -3,10 +3,7 @@ package com.example.weatherappwithkotlin.adapter
 import android.annotation.SuppressLint
 import android.widget.ImageView
 import android.widget.TextView
-import com.example.weatherappwithkotlin.R
-import com.example.weatherappwithkotlin.customenum.BackgroundCollection
 import com.example.weatherappwithkotlin.customenum.ConditionWarning
-import com.example.weatherappwithkotlin.customenum.WeatherConditionCollection
 import com.example.weatherappwithkotlin.dao.forecast.ForecastDTO
 import java.util.*
 
@@ -37,10 +34,10 @@ class CurrentCardAdapter(private var forecastDTO: ForecastDTO) {
             }
         }
         list[0].text = name
-        list[2].text = WeatherConditionCollection().getWeatherConditionByCode(forecastDTO.daily.weathercode[0])
+        list[2].text = ConditionWarning().getWeatherConditionByCode(forecastDTO.daily.weathercode[0])
         list[4].text = forecastDTO.daily.temperature_2m_min[0].toString() + "°C / " + forecastDTO.daily.temperature_2m_max[0].toString() + "°C"
         list[5].text = forecastDTO.daily.time[0]
         list[6].text = ConditionWarning().getWeatherConditionWarning(forecastDTO.hourly.weathercode[0])
-        imageView.setImageResource(BackgroundCollection().getIconByWeatherCode(forecastDTO.hourly.weathercode[0]))
+        imageView.setImageResource(ConditionWarning().getIconWeatherCode(forecastDTO.hourly.weathercode[0]))
     }
 }

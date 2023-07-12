@@ -5,7 +5,7 @@ import android.os.Build
 import androidx.annotation.RequiresApi
 import androidx.fragment.app.FragmentActivity
 import androidx.viewpager2.widget.ViewPager2
-import com.example.weatherappwithkotlin.customenum.WeatherConditionCollection
+import com.example.weatherappwithkotlin.customenum.ConditionWarning
 import com.example.weatherappwithkotlin.customenum.WeatherIconCollection
 import com.example.weatherappwithkotlin.dao.forecast.ForecastDTO
 import com.example.weatherappwithkotlin.dto.ViewPagerListItem
@@ -32,9 +32,9 @@ class RecyclerViewAdapter(private val forecastDTO: ForecastDTO) {
                 hoursList.add(
                     ViewPagerListItem(
                         formattedTime,
-                        WeatherConditionCollection().getWeatherConditionByCode(forecastDTO.hourly.weathercode[index]),
+                        ConditionWarning().getWeatherConditionByCode(forecastDTO.hourly.weathercode[index]),
                         forecastDTO.hourly.temperature_2m[index].toString() + "°C",
-                        WeatherIconCollection().getIconByWeatherCode(forecastDTO.hourly.weathercode[index])
+                        ConditionWarning().getIconByWeatherCode(forecastDTO.hourly.weathercode[index])
                     )
                 )
             }
@@ -44,9 +44,9 @@ class RecyclerViewAdapter(private val forecastDTO: ForecastDTO) {
             daysList.add(
                 ViewPagerListItem(
                     forecastDTO.daily.time[index],
-                    WeatherConditionCollection().getWeatherConditionByCode(forecastDTO.daily.weathercode[index]),
+                    ConditionWarning().getWeatherConditionByCode(forecastDTO.daily.weathercode[index]),
                     forecastDTO.daily.temperature_2m_min[index].toString() + "°C / " + forecastDTO.daily.temperature_2m_max[index].toString() + "°C",
-                    WeatherIconCollection().getIconByWeatherCode(forecastDTO.daily.weathercode[index])
+                    ConditionWarning().getIconByWeatherCode(forecastDTO.daily.weathercode[index])
                 )
             )
         }
