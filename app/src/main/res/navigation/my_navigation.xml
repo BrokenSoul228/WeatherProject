@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/my_navigation"
+    app:startDestination="@id/noInternet">
+
+    <fragment
+        android:id="@+id/noInternet"
+        android:name="com.example.weatherappwithkotlin.screen.fragment.NoInternet"
+        android:label="fragment_no_internet2"
+        tools:layout="@layout/fragment_no_internet2" />
+</navigation>
