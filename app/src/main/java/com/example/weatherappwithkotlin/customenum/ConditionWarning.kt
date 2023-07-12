@@ -4,7 +4,7 @@ import com.example.weatherappwithkotlin.R
 
 enum class ConditionWarning(code: List<Int>){
     WARNING_FOG(45,46),
-    UMBRELLA(51,53,55,61,80,63,81,65,82,66,67,77,95,96,99),
+    UMBRELLA(51,53,55,61,80,63,81,65,82,66,67,77,95,96,99, 100),
     WARNING_DRIZZLE(56),
     DRESS(listOf(56,57,71,85,75,86,73),
 
