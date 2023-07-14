@@ -1,13 +1,16 @@
 package com.example.weatherappwithkotlin.adapter
 
+import android.annotation.SuppressLint
 import android.icu.text.SimpleDateFormat
 import android.os.Build
-import android.util.Log
 import androidx.annotation.RequiresApi
 import androidx.fragment.app.FragmentActivity
 import androidx.viewpager2.widget.ViewPager2
+import com.example.weatherappwithkotlin.R
 import com.example.weatherappwithkotlin.customenum.ConditionWarning.Forecast.Companion.getForecastCondition
 import com.example.weatherappwithkotlin.customenum.ConditionWarning.IconCollection.Companion.getIconCondition
+import com.example.weatherappwithkotlin.customenum.ConditionWarning.TextColorCondition.Companion.getForecastTextColor
+import com.example.weatherappwithkotlin.customenum.ConditionWarning.TextColorCondition.Companion.getTextColorCondition
 import com.example.weatherappwithkotlin.dao.forecast.ForecastDTO
 import com.example.weatherappwithkotlin.dto.ViewPagerListItem
 import com.example.weatherappwithkotlin.screen.fragment.DaysFragment
@@ -16,15 +19,15 @@ import java.util.*
 
 class RecyclerViewAdapter(private val forecastDTO: ForecastDTO) {
 
-
+    @SuppressLint("SimpleDateFormat")
     @RequiresApi(Build.VERSION_CODES.N)
     fun fill(requireActivity: FragmentActivity, viewPager: ViewPager2) {
         val hoursList = ArrayList<ViewPagerListItem>()
         val daysList = ArrayList<ViewPagerListItem>()
         val currentHour = Calendar.getInstance().get(Calendar.HOUR_OF_DAY)
         val currentCalendar = Calendar.getInstance()
-        Log.d("ALLLOOO", hoursList.toString())
-        for (index in forecastDTO.hourly.weathercode.indices) {
+
+        forecastDTO.hourly.weathercode.forEachIndexed { index, weatherCode ->
             val timeString = forecastDTO.hourly.time[index]
             val hour = parseHourFromTimeString(timeString)
             val dataTime = parseDayIsCurrent(timeString)
@@ -34,21 +37,21 @@ class RecyclerViewAdapter(private val forecastDTO: ForecastDTO) {
                 hoursList.add(
                     ViewPagerListItem(
                         formattedTime,
-                        getForecastCondition(forecastDTO.hourly.weathercode[index]),
-                        forecastDTO.hourly.temperature_2m[index].toString() + "°C",
-                        getIconCondition(forecastDTO.hourly.weathercode[index])
+                        getForecastCondition(weatherCode),
+                        "${forecastDTO.hourly.temperature_2m[index]}°C",
+                        getIconCondition(weatherCode)
                     )
                 )
             }
         }
 
-        for (index in forecastDTO.daily.weathercode.indices) {
+        forecastDTO.daily.weathercode.forEachIndexed { index, weatherCode ->
             daysList.add(
                 ViewPagerListItem(
                     forecastDTO.daily.time[index],
-                    getForecastCondition(forecastDTO.daily.weathercode[index]),
-                    forecastDTO.daily.temperature_2m_min[index].toString() + "°C / " + forecastDTO.daily.temperature_2m_max[index].toString() + "°C",
-                    getIconCondition(forecastDTO.daily.weathercode[index])
+                    getForecastCondition(weatherCode),
+                    "${forecastDTO.daily.temperature_2m_min[index]}°C / ${forecastDTO.daily.temperature_2m_max[index]}°C",
+                    getIconCondition(weatherCode)
                 )
             )
         }
@@ -56,7 +59,7 @@ class RecyclerViewAdapter(private val forecastDTO: ForecastDTO) {
         viewPager.adapter = ViewPagerAdapter(requireActivity, listOf(HoursFragment.newInstance(hoursList), DaysFragment.newInstance(daysList)))
     }
 
-    fun isHourInCurrentDay(hour: Int): Boolean {
+    private fun isHourInCurrentDay(hour: Int): Boolean {
         val currentCalendar = Calendar.getInstance()
         val currentDay = currentCalendar.get(Calendar.DAY_OF_MONTH)
 
@@ -69,26 +72,25 @@ class RecyclerViewAdapter(private val forecastDTO: ForecastDTO) {
         return currentDay == hourDay
     }
 
-    fun formatHourMinute(hour: Int): String {
+    private fun formatHourMinute(hour: Int): String {
         return String.format("%02d:00", hour)
     }
+
+    @SuppressLint("SimpleDateFormat")
     @RequiresApi(Build.VERSION_CODES.N)
-    fun parseHourFromTimeString(timeString: String): Int {
-        val pattern = "yyyy-MM-dd'T'HH:mm"
-        val formatter = SimpleDateFormat(pattern, Locale.getDefault())
-        val date = formatter.parse(timeString)
+    private fun parseHourFromTimeString(timeString: String): Int {
+        val formatter = SimpleDateFormat("yyyy-MM-dd'T'HH:mm", Locale.getDefault())
         val calendar = Calendar.getInstance()
-        calendar.time = date
+        calendar.time = formatter.parse(timeString) as Date
         return calendar.get(Calendar.HOUR_OF_DAY)
     }
 
+    @SuppressLint("SimpleDateFormat")
     @RequiresApi(Build.VERSION_CODES.N)
     private fun parseDayIsCurrent(timeString: String): Int {
-        val pattern = "yyyy-MM-dd'T'HH:mm"
-        val formatter = SimpleDateFormat(pattern, Locale.getDefault())
-        val date = formatter.parse(timeString)
+        val formatter = SimpleDateFormat("yyyy-MM-dd'T'HH:mm", Locale.getDefault())
         val calendar = Calendar.getInstance()
-        calendar.time = date
+        calendar.time = formatter.parse(timeString) as Date
         return calendar.get(Calendar.DAY_OF_MONTH)
     }
 }

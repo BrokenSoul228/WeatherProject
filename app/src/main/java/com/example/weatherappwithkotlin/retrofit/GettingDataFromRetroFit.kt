@@ -178,7 +178,7 @@ class GettingDataFromRetrofit private constructor() {
                             mainScreen.saveForecastData(
                                 cityDto.results[0].name,
                                 getForecastCondition(forecastDTO.daily.weathercode[0]),
-                                forecastDTO.hourly.temperature_2m[index].toString(),
+                                forecastDTO.hourly.temperature_2m[index].toString() ,
                                 forecastDTO.hourly.windspeed_10m[index].toString() + " km/h",
                                 forecastDTO.daily.temperature_2m_min[0].toString() + "°C / " + forecastDTO.daily.temperature_2m_max[0].toString() + "°C",
 

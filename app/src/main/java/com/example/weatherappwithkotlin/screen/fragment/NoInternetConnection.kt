@@ -15,29 +15,33 @@ import com.example.weatherappwithkotlin.R
 import com.example.weatherappwithkotlin.screen.MainScreen
 
 class NoInternetConnection : Fragment() {
+
     @RequiresApi(Build.VERSION_CODES.M)
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
         val view = inflater.inflate(R.layout.fragment_no_internet2, container, false)
-        val retryButton : Button = view.findViewById(R.id.RetryButton)
+        val retryButton: Button = view.findViewById(R.id.RetryButton)
         retryButton.setOnClickListener {
-            if (isInternetAvailabel() == true){
-            val fragment = MainScreen()
-            val transaction = requireActivity().supportFragmentManager.beginTransaction()
-            transaction.remove(this@NoInternetConnection)
-            transaction.replace(R.id.nav_container, fragment).commit()
+            if (isInternetAvailable()) {
+                val fragment = MainScreen()
+                val transaction = requireActivity().supportFragmentManager.beginTransaction()
+                transaction.remove(this@NoInternetConnection)
+                transaction.replace(R.id.nav_container, fragment).commit()
+            } else {
+                // Показать сообщение об ошибке или выполнить другие действия, чтобы уведомить пользователя о проблеме с подключением к Интернету
             }
         }
-
         return view
     }
+
     @RequiresApi(Build.VERSION_CODES.M)
-    private fun isInternetAvailabel() : Boolean?{
-        val connectivityManager = requireContext().getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+    private fun isInternetAvailable(): Boolean {
+        val connectivityManager =
+            requireContext().getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
         val network = connectivityManager.activeNetwork
         val networkCapabilities = connectivityManager.getNetworkCapabilities(network)
-        return networkCapabilities?.hasCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET)
+        return networkCapabilities?.hasCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET) == true
     }
 }

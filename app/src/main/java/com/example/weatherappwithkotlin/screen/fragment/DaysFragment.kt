@@ -1,23 +1,23 @@
 package com.example.weatherappwithkotlin.screen.fragment
 
+import ViewPagerListAdapter
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
-import com.example.weatherappwithkotlin.adapter.ViewPagerListAdapter
 import com.example.weatherappwithkotlin.databinding.FragmentDaysBinding
 import com.example.weatherappwithkotlin.dto.ViewPagerListItem
 
 
-class DaysFragment(list : List<ViewPagerListItem>) : Fragment() {
+class DaysFragment(private val list: List<ViewPagerListItem>) : Fragment() {
 
-    private lateinit var binding : FragmentDaysBinding
-    private lateinit var viewPagerListAdapter : ViewPagerListAdapter
+    private lateinit var binding: FragmentDaysBinding
+    private lateinit var viewPagerListAdapter: ViewPagerListAdapter
     private lateinit var swipeRefresh: SwipeRefreshLayout
-    private val list : List<ViewPagerListItem> = list
+    private val layoutManager: LinearLayoutManager by lazy { LinearLayoutManager(requireActivity()) }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -29,28 +29,26 @@ class DaysFragment(list : List<ViewPagerListItem>) : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        swipeRefresh = binding.swipeRefresh
         fillRecycleList()
-        swipeRefresh.setOnRefreshListener{
+        swipeRefresh.setOnRefreshListener {
             fillRecycleList()
             swipeRefresh.isRefreshing = false
         }
     }
 
-    private fun fillRecycleList() = with(binding) {
-        this@DaysFragment.swipeRefresh = binding.swipeRefresh
-        daysSwitchList.layoutManager = LinearLayoutManager(activity)
-        viewPagerListAdapter = ViewPagerListAdapter()
-        daysSwitchList.adapter = viewPagerListAdapter
-        viewPagerListAdapter.submitList(list)
-    }
-
-    fun refill(list: List<ViewPagerListItem>) = with(binding) {
-        viewPagerListAdapter.submitList(list)
+    private fun fillRecycleList() {
+        with(binding) {
+            daysSwitchList.layoutManager = layoutManager
+            viewPagerListAdapter = ViewPagerListAdapter()
+            daysSwitchList.adapter = viewPagerListAdapter
+            viewPagerListAdapter.submitList(list)
+        }
     }
 
     companion object {
         @JvmStatic
-        fun newInstance(list : List<ViewPagerListItem>) =
+        fun newInstance(list: List<ViewPagerListItem>) =
             DaysFragment(list)
     }
 }

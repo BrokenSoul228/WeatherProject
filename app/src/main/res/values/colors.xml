@@ -4,4 +4,8 @@
     <color name="white">#FFFFFFFF</color>
     <color name="card_blue_bg">#4A00A8F7</color>
     <color name="blue">#4A0429E6</color>
+    <color name="red">#FF0000</color>
+    <color name="yellow">#FFE600</color>
+    <color name="green">#11FF00</color>
+    <color name="pink">#D900FF</color>
 </resources>
