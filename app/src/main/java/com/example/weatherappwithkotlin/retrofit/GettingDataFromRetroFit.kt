@@ -1,6 +1,5 @@
 import android.annotation.SuppressLint
 import android.content.Context
-import android.os.Build
 import android.os.Handler
 import android.os.Looper
 import android.util.Log
@@ -9,15 +8,16 @@ import android.widget.AutoCompleteTextView
 import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
-import androidx.annotation.RequiresApi
 import androidx.fragment.app.FragmentActivity
 import androidx.viewpager2.widget.ViewPager2
+import com.example.weatherappwithkotlin.R
 import com.example.weatherappwithkotlin.adapter.CurrentCardAdapter
 import com.example.weatherappwithkotlin.adapter.RecyclerViewAdapter
+import com.example.weatherappwithkotlin.customenum.ConditionWarning
 import com.example.weatherappwithkotlin.customenum.ConditionWarning.Companion.getWeatherConditionWarning
 import com.example.weatherappwithkotlin.customenum.ConditionWarning.Forecast.Companion.getForecastCondition
-import com.example.weatherappwithkotlin.dao.city.CityDTO
-import com.example.weatherappwithkotlin.dao.forecast.ForecastDTO
+import com.example.weatherappwithkotlin.dto.city.CityDTO
+import com.example.weatherappwithkotlin.dto.forecast.ForecastDTO
 import com.example.weatherappwithkotlin.retrofit.RetroFit
 import com.example.weatherappwithkotlin.screen.MainScreen
 import retrofit2.Call
@@ -91,9 +91,9 @@ class GettingDataFromRetrofit private constructor() {
                         searchBar.setAdapter(
                             ArrayAdapter(
                                 requiredContext,
-                        androidx.appcompat.R.layout.support_simple_spinner_dropdown_item,
-                        list
-                        )
+                                androidx.appcompat.R.layout.support_simple_spinner_dropdown_item,
+                                list
+                            )
                         )
                         Log.d("INFO", cityDTO.toString())
                     }
@@ -112,7 +112,8 @@ class GettingDataFromRetrofit private constructor() {
         viewPager: ViewPager2,
         listOfTextView: List<TextView>,
         imageView: ImageView,
-        mainScreen: MainScreen
+        mainScreen: MainScreen,
+        context: Context
     ) {
         val json = retrofitCity.getCityJson(text)
         var cityDTO: CityDTO
@@ -128,7 +129,8 @@ class GettingDataFromRetrofit private constructor() {
                             viewPager,
                             listOfTextView,
                             imageView,
-                            mainScreen
+                            mainScreen,
+                            context
                         )
                     }
                 }
@@ -145,18 +147,18 @@ class GettingDataFromRetrofit private constructor() {
         viewPager: ViewPager2,
         listOfTextView: List<TextView>,
         imageView: ImageView,
-        mainScreen: MainScreen
+        mainScreen: MainScreen,
+        context: Context
     ) {
         val json = retrofitForecast.getForecastJson(cityDto.results[0].latitude, cityDto.results[0].longitude)
         var forecastDTO: ForecastDTO
 
         json.enqueue(object : Callback<ForecastDTO> {
-            @RequiresApi(Build.VERSION_CODES.N)
             override fun onResponse(call: Call<ForecastDTO>, response: Response<ForecastDTO>) {
                 if (response.isSuccessful) {
                     forecastDTO = response.body()!!
-                    RecyclerViewAdapter(forecastDTO).fill(requireActivity, viewPager)
-                    CurrentCardAdapter(forecastDTO).fill(
+                    RecyclerViewAdapter(forecastDTO).fill(requireActivity, viewPager, context)
+                    CurrentCardAdapter(forecastDTO,context).fill(
                         listOfTextView,
                         cityDto.results[0].name,
                         imageView
@@ -179,11 +181,13 @@ class GettingDataFromRetrofit private constructor() {
                                 cityDto.results[0].name,
                                 getForecastCondition(forecastDTO.daily.weathercode[0]),
                                 forecastDTO.hourly.temperature_2m[index].toString() ,
-                                forecastDTO.hourly.windspeed_10m[index].toString() + " km/h",
-                                forecastDTO.daily.temperature_2m_min[0].toString() + "°C / " + forecastDTO.daily.temperature_2m_max[0].toString() + "°C",
+                                forecastDTO.hourly.windspeed_10m[index].toString() + " " + context.getText(R.string.Speed),
+                                forecastDTO.daily.temperature_2m_min[0].toString() + "${context.getText(
+                                    R.string.Celsius)} / " + forecastDTO.daily.temperature_2m_max[0].toString() + context.getText(R.string.Celsius),
 
-                            forecastDTO.daily.time[0],
-                            getWeatherConditionWarning(forecastDTO.hourly.weathercode[0])
+                                forecastDTO.daily.time[0],
+                                getWeatherConditionWarning(forecastDTO.hourly.weathercode[0]),
+                                ConditionWarning.BackgroundIcon.getBackgroundCondition(forecastDTO.hourly.weathercode[0])
                             )
                         }
                     }

@@ -1,29 +1,28 @@
 package com.example.weatherappwithkotlin.adapter
 
 import android.annotation.SuppressLint
+import android.content.Context
+import android.content.SharedPreferences
 import android.icu.text.SimpleDateFormat
-import android.os.Build
-import androidx.annotation.RequiresApi
 import androidx.fragment.app.FragmentActivity
 import androidx.viewpager2.widget.ViewPager2
 import com.example.weatherappwithkotlin.R
 import com.example.weatherappwithkotlin.customenum.ConditionWarning.Forecast.Companion.getForecastCondition
 import com.example.weatherappwithkotlin.customenum.ConditionWarning.IconCollection.Companion.getIconCondition
-import com.example.weatherappwithkotlin.customenum.ConditionWarning.TextColorCondition.Companion.getForecastTextColor
-import com.example.weatherappwithkotlin.customenum.ConditionWarning.TextColorCondition.Companion.getTextColorCondition
-import com.example.weatherappwithkotlin.dao.forecast.ForecastDTO
-import com.example.weatherappwithkotlin.dto.ViewPagerListItem
+import com.example.weatherappwithkotlin.dto.forecast.ForecastDTO
+import com.example.weatherappwithkotlin.screen.ViewPagerListItem
 import com.example.weatherappwithkotlin.screen.fragment.DaysFragment
 import com.example.weatherappwithkotlin.screen.fragment.HoursFragment
+import com.google.gson.Gson
+import com.google.gson.reflect.TypeToken
 import java.util.*
 
 class RecyclerViewAdapter(private val forecastDTO: ForecastDTO) {
-
+    var hoursList = ArrayList<ViewPagerListItem>()
+    var daysList = ArrayList<ViewPagerListItem>()
     @SuppressLint("SimpleDateFormat")
-    @RequiresApi(Build.VERSION_CODES.N)
-    fun fill(requireActivity: FragmentActivity, viewPager: ViewPager2) {
-        val hoursList = ArrayList<ViewPagerListItem>()
-        val daysList = ArrayList<ViewPagerListItem>()
+    fun fill(requireActivity: FragmentActivity, viewPager: ViewPager2, context: Context) {
+
         val currentHour = Calendar.getInstance().get(Calendar.HOUR_OF_DAY)
         val currentCalendar = Calendar.getInstance()
 
@@ -38,7 +37,7 @@ class RecyclerViewAdapter(private val forecastDTO: ForecastDTO) {
                     ViewPagerListItem(
                         formattedTime,
                         getForecastCondition(weatherCode),
-                        "${forecastDTO.hourly.temperature_2m[index]}°C",
+                        "${forecastDTO.hourly.temperature_2m[index]}"+ context.getText(R.string.Celsius),
                         getIconCondition(weatherCode)
                     )
                 )
@@ -50,13 +49,15 @@ class RecyclerViewAdapter(private val forecastDTO: ForecastDTO) {
                 ViewPagerListItem(
                     forecastDTO.daily.time[index],
                     getForecastCondition(weatherCode),
-                    "${forecastDTO.daily.temperature_2m_min[index]}°C / ${forecastDTO.daily.temperature_2m_max[index]}°C",
+                    "${forecastDTO.daily.temperature_2m_min[index]}${context.getText(R.string.Celsius)} / ${forecastDTO.daily.temperature_2m_max[index]}${context.getText(R.string.Celsius)}",
                     getIconCondition(weatherCode)
                 )
             )
         }
 
         viewPager.adapter = ViewPagerAdapter(requireActivity, listOf(HoursFragment.newInstance(hoursList), DaysFragment.newInstance(daysList)))
+
+
     }
 
     private fun isHourInCurrentDay(hour: Int): Boolean {
@@ -77,7 +78,6 @@ class RecyclerViewAdapter(private val forecastDTO: ForecastDTO) {
     }
 
     @SuppressLint("SimpleDateFormat")
-    @RequiresApi(Build.VERSION_CODES.N)
     private fun parseHourFromTimeString(timeString: String): Int {
         val formatter = SimpleDateFormat("yyyy-MM-dd'T'HH:mm", Locale.getDefault())
         val calendar = Calendar.getInstance()
@@ -86,7 +86,6 @@ class RecyclerViewAdapter(private val forecastDTO: ForecastDTO) {
     }
 
     @SuppressLint("SimpleDateFormat")
-    @RequiresApi(Build.VERSION_CODES.N)
     private fun parseDayIsCurrent(timeString: String): Int {
         val formatter = SimpleDateFormat("yyyy-MM-dd'T'HH:mm", Locale.getDefault())
         val calendar = Calendar.getInstance()

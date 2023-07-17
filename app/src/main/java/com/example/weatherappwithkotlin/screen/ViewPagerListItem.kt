@@ -1,6 +1,4 @@
-package com.example.weatherappwithkotlin.dto
-
-import android.graphics.Color
+package com.example.weatherappwithkotlin.screen
 
 data class ViewPagerListItem (
     val date: String,

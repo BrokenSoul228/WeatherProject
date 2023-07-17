@@ -1,4 +1,3 @@
-
 package com.example.weatherappwithkotlin.screen
 
 import GettingDataFromRetrofit
@@ -18,9 +17,12 @@ import androidx.core.widget.doAfterTextChanged
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
 import androidx.viewpager2.widget.ViewPager2
+import com.example.weatherappwithkotlin.R
+import com.example.weatherappwithkotlin.adapter.RecyclerViewAdapter
 import com.example.weatherappwithkotlin.adapter.ViewPagerAdapter
 import com.example.weatherappwithkotlin.databinding.ActivityMainScreenBinding
 import com.example.weatherappwithkotlin.databinding.SearchbarLayoutItemBinding
+import com.example.weatherappwithkotlin.dto.Constants
 import com.example.weatherappwithkotlin.screen.fragment.DaysFragment
 import com.example.weatherappwithkotlin.screen.fragment.HoursFragment
 import com.google.android.material.tabs.TabLayout
@@ -36,6 +38,7 @@ class MainScreen : Fragment() {
     private lateinit var viewPageAdapter : ViewPagerAdapter
     private lateinit var sharedPref: SharedPreferences
     private lateinit var retrofitHelper : GettingDataFromRetrofit
+    private lateinit var recyclerViewAdapter : RecyclerViewAdapter
 
     private lateinit var text1 : TextView
     private lateinit var text2 : TextView
@@ -49,6 +52,7 @@ class MainScreen : Fragment() {
     private val tabLayoutHeaderList = listOf("Hours", "Days")
     private var hoursFragment = HoursFragment.newInstance(emptyList())
     private var daysFragment = DaysFragment.newInstance(emptyList())
+
     private var pageViewInitializator = listOf(
         hoursFragment,
         daysFragment
@@ -79,6 +83,7 @@ class MainScreen : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         initAllFragments()
         loadForecastData()
+
         retrofitHelper = GettingDataFromRetrofit.getInstance()
         searchBar.doAfterTextChanged {
             retrofitHelper.getCityList(
@@ -90,41 +95,46 @@ class MainScreen : Fragment() {
 
         searchBar.setOnItemClickListener { parent, view, position, id ->
             val selectedCity = parent.getItemAtPosition(position)
-            retrofitHelper.getForecast(
-                selectedCity.toString(),
-                requireActivity(),
-                viewPager,
-                listOf(text1, text2, text3, text4, text5, text6, text7),
-                image,
-                this
-            )
+            context?.let {
+                retrofitHelper.getForecast(
+                    selectedCity.toString(),
+                    requireActivity(),
+                    viewPager,
+                    listOf(text1, text2, text3, text4, text5, text6, text7),
+                    image,
+                    this,
+                    it
+                )
+            }
             val intupDone = requireActivity().getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
             intupDone.hideSoftInputFromWindow(searchBar.windowToken, 0)
         }
     }
 
-    fun saveForecastData(cityName : String, condition : String, temp : String, windSpeed : String, maxMin : String, time : String, warning : String) {
+    fun saveForecastData(cityName : String, condition : String, temp : String, windSpeed : String, maxMin : String, time : String, warning : String?, icon : Int) {
         sharedPref = requireActivity().getPreferences(Context.MODE_PRIVATE)
         val editor = sharedPref.edit()
-        editor.putString("cityName", cityName)
-        editor.putString("condition", condition)
-        editor.putString("temp", temp)
-        editor.putString("windSpeed", windSpeed)
-        editor.putString("MaxMin", maxMin)
-        editor.putString("time", time)
-        editor.putString("warning", warning)
+        editor.putString(Constants.CITY_NAME, cityName)
+        editor.putString(Constants.CONDITION, condition)
+        editor.putString(Constants.TEMP, temp)
+        editor.putString(Constants.WIND_SPEED, windSpeed)
+        editor.putString(Constants.MAX_MIN, maxMin)
+        editor.putString(Constants.TIME, time)
+        editor.putString(Constants.WARNING, warning)
+        editor.putInt(Constants.Icon, icon)
         editor.apply()
     }
 
     private fun loadForecastData() {
         sharedPref = requireActivity().getPreferences(Context.MODE_PRIVATE)
-        val cityName = sharedPref.getString("cityName", "")
-        val condition = sharedPref.getString("condition", "")
-        val temp = sharedPref.getString("temp", "")
-        val windSpeed = sharedPref.getString("windSpeed", "")
-        val maxMin = sharedPref.getString("maxMin", "")
-        val time = sharedPref.getString("time", "")
-        val warning = sharedPref.getString("warning", "")
+        val cityName = sharedPref.getString(Constants.CITY_NAME, "")
+        val condition = sharedPref.getString(Constants.CONDITION, "")
+        val temp = sharedPref.getString(Constants.TEMP, "")
+        val windSpeed = sharedPref.getString(Constants.WIND_SPEED, "")
+        val maxMin = sharedPref.getString(Constants.MAX_MIN, "")
+        val time = sharedPref.getString(Constants.TIME, "")
+        val warning = sharedPref.getString(Constants.WARNING, "")
+        val icon = sharedPref.getInt(Constants.Icon, R.drawable.rainmini)
 
         text1.text = cityName
         text2.text = temp
@@ -133,6 +143,7 @@ class MainScreen : Fragment() {
         text5.text = maxMin
         text6.text = time
         text7.text = warning
+        image.setImageResource(icon)
     }
 
     private fun initAllFragments() {
@@ -154,5 +165,4 @@ class MainScreen : Fragment() {
         val searchBarAdapter = ArrayAdapter(requireContext(), androidx.appcompat.R.layout.support_simple_spinner_dropdown_item, emptyList<String>())
         searchBar.setAdapter(searchBarAdapter)
     }
-
 }

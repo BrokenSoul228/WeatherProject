@@ -9,7 +9,7 @@ import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.example.weatherappwithkotlin.databinding.FragmentHoursBinding
-import com.example.weatherappwithkotlin.dto.ViewPagerListItem
+import com.example.weatherappwithkotlin.screen.ViewPagerListItem
 
 class HoursFragment(private val list: List<ViewPagerListItem>) : Fragment() {
 

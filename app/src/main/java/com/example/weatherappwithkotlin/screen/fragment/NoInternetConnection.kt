@@ -16,7 +16,6 @@ import com.example.weatherappwithkotlin.screen.MainScreen
 
 class NoInternetConnection : Fragment() {
 
-    @RequiresApi(Build.VERSION_CODES.M)
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -29,14 +28,11 @@ class NoInternetConnection : Fragment() {
                 val transaction = requireActivity().supportFragmentManager.beginTransaction()
                 transaction.remove(this@NoInternetConnection)
                 transaction.replace(R.id.nav_container, fragment).commit()
-            } else {
-                // Показать сообщение об ошибке или выполнить другие действия, чтобы уведомить пользователя о проблеме с подключением к Интернету
-            }
+            } else {}
         }
         return view
     }
 
-    @RequiresApi(Build.VERSION_CODES.M)
     private fun isInternetAvailable(): Boolean {
         val connectivityManager =
             requireContext().getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
