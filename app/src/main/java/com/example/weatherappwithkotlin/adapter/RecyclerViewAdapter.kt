@@ -2,7 +2,6 @@ package com.example.weatherappwithkotlin.adapter
 
 import android.annotation.SuppressLint
 import android.content.Context
-import android.content.SharedPreferences
 import android.icu.text.SimpleDateFormat
 import androidx.fragment.app.FragmentActivity
 import androidx.viewpager2.widget.ViewPager2
@@ -13,8 +12,6 @@ import com.example.weatherappwithkotlin.dto.forecast.ForecastDTO
 import com.example.weatherappwithkotlin.screen.ViewPagerListItem
 import com.example.weatherappwithkotlin.screen.fragment.DaysFragment
 import com.example.weatherappwithkotlin.screen.fragment.HoursFragment
-import com.google.gson.Gson
-import com.google.gson.reflect.TypeToken
 import java.util.*
 
 class RecyclerViewAdapter(private val forecastDTO: ForecastDTO) {

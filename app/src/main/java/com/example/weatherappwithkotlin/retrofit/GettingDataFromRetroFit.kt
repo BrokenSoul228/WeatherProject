@@ -1,3 +1,5 @@
+package com.example.weatherappwithkotlin.retrofit
+
 import android.annotation.SuppressLint
 import android.content.Context
 import android.os.Handler
@@ -18,7 +20,6 @@ import com.example.weatherappwithkotlin.customenum.ConditionWarning.Companion.ge
 import com.example.weatherappwithkotlin.customenum.ConditionWarning.Forecast.Companion.getForecastCondition
 import com.example.weatherappwithkotlin.dto.city.CityDTO
 import com.example.weatherappwithkotlin.dto.forecast.ForecastDTO
-import com.example.weatherappwithkotlin.retrofit.RetroFit
 import com.example.weatherappwithkotlin.screen.MainScreen
 import retrofit2.Call
 import retrofit2.Callback
@@ -164,7 +165,7 @@ class GettingDataFromRetrofit private constructor() {
                         imageView
                     )
                     for (index in forecastDTO.hourly.weathercode.indices) {
-                        var date = forecastDTO.hourly.time[index]
+                        val date = forecastDTO.hourly.time[index]
                         var day = date.substring(8, 10)
                         if (day.startsWith("0")) {
                             day = day.substring(1)

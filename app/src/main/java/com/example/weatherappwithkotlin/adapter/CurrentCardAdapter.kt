@@ -59,9 +59,9 @@ class CurrentCardAdapter(private var forecastDTO: ForecastDTO,private val contex
     }
 
     private fun getImageResourceIds(): List<Int> {
-        return listOf(R.drawable.sunnycloudy, R.drawable.verycloudy,R.drawable.fogg, R.drawable.rainmini,
-           R.drawable.mediumrain,R.drawable.powerraain, R.drawable.snowfallpowerr, R.drawable.mediumsnow,
-            R.drawable.snowpover,R.drawable.thunder1024)
+        return listOf(R.drawable.clearsky, R.drawable.cloudysky,R.drawable.fog1, R.drawable.littlerain,
+           R.drawable.moderaterain,R.drawable.hardrain, R.drawable.snowstorm, R.drawable.moderatesnow,
+            R.drawable.littlesnow,R.drawable.thunder)
     }
 
 }

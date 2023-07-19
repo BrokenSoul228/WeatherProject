@@ -75,16 +75,16 @@ enum class ConditionWarning (private val code : List<Int>, private val message :
     }
 
     enum class BackgroundIcon(private val code: List<Int>, private val message: Int) {
-        CLEAR(listOf(0,1), R.drawable.sunnycloudy),
-        PARTLY_CLOUDY(listOf(2,3), R.drawable.verycloudy),
-        FOG(listOf(45, 48), R.drawable.fogg),
-        LITTLE_DRIZZLE(listOf(51, 56, 57,61, 80), R.drawable.rainmini),
-        MODERATE_DRIZZLE(listOf(53,63, 81,66, 67), R.drawable.mediumrain),
-        POWER_DRIZZLE(listOf(55,65, 82), R.drawable.powerraain),
-        LITTLE_SNOW(listOf(71, 85), R.drawable.snowfallpowerr),
-        MODERATE_SNOW(listOf(73), R.drawable.mediumsnow),
-        POWERFUL_SNOW(listOf(75, 86,77), R.drawable.snowpover),
-        THUNDER(listOf(95,96, 99), R.drawable.thunder1024), ;
+        CLEAR(listOf(0,1), R.drawable.clearsky),
+        PARTLY_CLOUDY(listOf(2,3), R.drawable.cloudysky),
+        FOG(listOf(45, 48), R.drawable.fog1),
+        LITTLE_DRIZZLE(listOf(51, 56, 57,61, 80), R.drawable.littlerain),
+        MODERATE_DRIZZLE(listOf(53,63, 81,66, 67), R.drawable.moderaterain),
+        POWER_DRIZZLE(listOf(55,65, 82), R.drawable.hardrain),
+        LITTLE_SNOW(listOf(71, 85), R.drawable.littlesnow),
+        MODERATE_SNOW(listOf(73), R.drawable.moderatesnow),
+        POWERFUL_SNOW(listOf(75, 86,77), R.drawable.snowstorm),
+        THUNDER(listOf(95,96, 99), R.drawable.thunder), ;
 
         companion object {
             fun getBackgroundCondition(code: Int): Int {

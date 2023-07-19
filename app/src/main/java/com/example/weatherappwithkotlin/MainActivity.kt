@@ -3,7 +3,6 @@ package com.example.weatherappwithkotlin
 import android.content.Context
 import android.net.ConnectivityManager
 import android.net.Network
-import android.net.NetworkCapabilities
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import com.example.weatherappwithkotlin.screen.MainScreen

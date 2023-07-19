@@ -84,8 +84,8 @@
 
             <TextView
                 android:id="@+id/Temperature"
-                android:layout_width="171dp"
-                android:layout_height="66dp"
+                android:layout_width="296dp"
+                android:layout_height="76dp"
                 android:gravity="center"
                 android:text="@string/Temperature"
                 android:textColor="@color/white"

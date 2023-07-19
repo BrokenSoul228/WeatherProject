@@ -1,6 +1,6 @@
 package com.example.weatherappwithkotlin.screen
 
-import GettingDataFromRetrofit
+import com.example.weatherappwithkotlin.retrofit.GettingDataFromRetrofit
 import android.content.Context
 import android.content.SharedPreferences
 import android.os.Bundle
@@ -18,7 +18,6 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
 import androidx.viewpager2.widget.ViewPager2
 import com.example.weatherappwithkotlin.R
-import com.example.weatherappwithkotlin.adapter.RecyclerViewAdapter
 import com.example.weatherappwithkotlin.adapter.ViewPagerAdapter
 import com.example.weatherappwithkotlin.databinding.ActivityMainScreenBinding
 import com.example.weatherappwithkotlin.databinding.SearchbarLayoutItemBinding
@@ -38,7 +37,6 @@ class MainScreen : Fragment() {
     private lateinit var viewPageAdapter : ViewPagerAdapter
     private lateinit var sharedPref: SharedPreferences
     private lateinit var retrofitHelper : GettingDataFromRetrofit
-    private lateinit var recyclerViewAdapter : RecyclerViewAdapter
 
     private lateinit var text1 : TextView
     private lateinit var text2 : TextView
@@ -53,7 +51,7 @@ class MainScreen : Fragment() {
     private var hoursFragment = HoursFragment.newInstance(emptyList())
     private var daysFragment = DaysFragment.newInstance(emptyList())
 
-    private var pageViewInitializator = listOf(
+    private var pageViewInitializer = listOf(
         hoursFragment,
         daysFragment
     )
@@ -86,14 +84,14 @@ class MainScreen : Fragment() {
 
         retrofitHelper = GettingDataFromRetrofit.getInstance()
         searchBar.doAfterTextChanged {
-            retrofitHelper.getCityList(
-                requireContext(),
-                searchBar.text.toString(),
-                searchBar
-            )
+                    retrofitHelper.getCityList(
+                        requireContext(),
+                        searchBar.text.toString(),
+                        searchBar
+                    )
         }
 
-        searchBar.setOnItemClickListener { parent, view, position, id ->
+        searchBar.setOnItemClickListener { parent, _ , position, _ ->
             val selectedCity = parent.getItemAtPosition(position)
             context?.let {
                 retrofitHelper.getForecast(
@@ -106,8 +104,8 @@ class MainScreen : Fragment() {
                     it
                 )
             }
-            val intupDone = requireActivity().getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
-            intupDone.hideSoftInputFromWindow(searchBar.windowToken, 0)
+            val inputDone = requireActivity().getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+            inputDone.hideSoftInputFromWindow(searchBar.windowToken, 0)
         }
     }
 
@@ -134,7 +132,7 @@ class MainScreen : Fragment() {
         val maxMin = sharedPref.getString(Constants.MAX_MIN, "")
         val time = sharedPref.getString(Constants.TIME, "")
         val warning = sharedPref.getString(Constants.WARNING, "")
-        val icon = sharedPref.getInt(Constants.Icon, R.drawable.rainmini)
+        val icon = sharedPref.getInt(Constants.Icon, R.drawable.littlerain)
 
         text1.text = cityName
         text2.text = temp
@@ -159,7 +157,7 @@ class MainScreen : Fragment() {
         text7 = binding.InformationTableBackGround
         image = binding.BackgroundImage
         informationTableContainer = binding.InformationTableContainer
-        viewPageAdapter = ViewPagerAdapter(activity as FragmentActivity, pageViewInitializator)
+        viewPageAdapter = ViewPagerAdapter(activity as FragmentActivity, pageViewInitializer)
         viewPager.adapter = viewPageAdapter
         TabLayoutMediator(tabLayout, viewPager) {tab, position -> tab.text = tabLayoutHeaderList[position]}.attach()
         val searchBarAdapter = ArrayAdapter(requireContext(), androidx.appcompat.R.layout.support_simple_spinner_dropdown_item, emptyList<String>())
