@@ -15,6 +15,7 @@
         android:layout_height="match_parent">
 
         <TextView
+            android:letterSpacing="0.2"
             android:id="@+id/Date"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -50,6 +51,7 @@
             app:srcCompat="@drawable/ic_launcher_foreground" />
 
         <TextView
+            android:letterSpacing="0.15"
             android:id="@+id/Temperature"
             android:fontFamily="@font/playkidz"
             android:layout_width="0dp"

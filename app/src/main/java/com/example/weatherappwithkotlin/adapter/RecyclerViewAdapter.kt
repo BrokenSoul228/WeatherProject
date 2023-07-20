@@ -12,50 +12,81 @@ import com.example.weatherappwithkotlin.dto.forecast.ForecastDTO
 import com.example.weatherappwithkotlin.screen.ViewPagerListItem
 import com.example.weatherappwithkotlin.screen.fragment.DaysFragment
 import com.example.weatherappwithkotlin.screen.fragment.HoursFragment
+import com.google.gson.Gson
+import com.google.gson.reflect.TypeToken
 import java.util.*
 
-class RecyclerViewAdapter(private val forecastDTO: ForecastDTO) {
+class RecyclerViewAdapter(private val forecastDTO: ForecastDTO, private val context: Context) {
     var hoursList = ArrayList<ViewPagerListItem>()
     var daysList = ArrayList<ViewPagerListItem>()
+
+    init {
+        loadItems()
+    }
     @SuppressLint("SimpleDateFormat")
     fun fill(requireActivity: FragmentActivity, viewPager: ViewPager2, context: Context) {
+            val currentHour = Calendar.getInstance().get(Calendar.HOUR_OF_DAY)
+            val currentCalendar = Calendar.getInstance()
 
-        val currentHour = Calendar.getInstance().get(Calendar.HOUR_OF_DAY)
-        val currentCalendar = Calendar.getInstance()
+            forecastDTO.hourly.weathercode.forEachIndexed { index, weatherCode ->
+                val timeString = forecastDTO.hourly.time[index]
+                val hour = parseHourFromTimeString(timeString)
+                val dataTime = parseDayIsCurrent(timeString)
+                val formattedTime = formatHourMinute(hour)
 
-        forecastDTO.hourly.weathercode.forEachIndexed { index, weatherCode ->
-            val timeString = forecastDTO.hourly.time[index]
-            val hour = parseHourFromTimeString(timeString)
-            val dataTime = parseDayIsCurrent(timeString)
-            val formattedTime = formatHourMinute(hour)
+                if (isHourInCurrentDay(hour) && hour <= 23 && hour >= currentCalendar.get(Calendar.HOUR_OF_DAY) && currentHour < 23 && dataTime <= currentCalendar.get(
+                        Calendar.DAY_OF_MONTH
+                    )
+                ) {
+                    hoursList.add(
+                        ViewPagerListItem(
+                            formattedTime,
+                            getForecastCondition(weatherCode),
+                            "${forecastDTO.hourly.temperature_2m[index]}" + context.getText(R.string.Celsius),
+                            getIconCondition(weatherCode)
+                        )
+                    )
+                }
+            }
 
-            if (isHourInCurrentDay(hour) && hour <= 23 && hour >= currentCalendar.get(Calendar.HOUR_OF_DAY) && currentHour < 23 && dataTime <= currentCalendar.get(Calendar.DAY_OF_MONTH)) {
-                hoursList.add(
+            forecastDTO.daily.weathercode.forEachIndexed { index, weatherCode ->
+                daysList.add(
                     ViewPagerListItem(
-                        formattedTime,
+                        forecastDTO.daily.time[index],
                         getForecastCondition(weatherCode),
-                        "${forecastDTO.hourly.temperature_2m[index]}"+ context.getText(R.string.Celsius),
+                        "${forecastDTO.daily.temperature_2m_min[index]}${context.getText(R.string.Celsius)}/${forecastDTO.daily.temperature_2m_max[index]}${
+                            context.getText(
+                                R.string.Celsius
+                            )
+                        }",
                         getIconCondition(weatherCode)
                     )
                 )
             }
-        }
-
-        forecastDTO.daily.weathercode.forEachIndexed { index, weatherCode ->
-            daysList.add(
-                ViewPagerListItem(
-                    forecastDTO.daily.time[index],
-                    getForecastCondition(weatherCode),
-                    "${forecastDTO.daily.temperature_2m_min[index]}${context.getText(R.string.Celsius)} / ${forecastDTO.daily.temperature_2m_max[index]}${context.getText(R.string.Celsius)}",
-                    getIconCondition(weatherCode)
-                )
-            )
-        }
 
         viewPager.adapter = ViewPagerAdapter(requireActivity, listOf(HoursFragment.newInstance(hoursList), DaysFragment.newInstance(daysList)))
-
-
+        saveItems(requireActivity)
     }
+
+    fun saveItems(context: Context) {
+        val sharedPreferences = context.getSharedPreferences("recycler_view_adapter", Context.MODE_PRIVATE)
+        sharedPreferences.edit().apply {
+            clear()
+            putString("hours_list", Gson().toJson(hoursList))
+            putString("days_list", Gson().toJson(daysList))
+            apply()
+        }
+    }
+
+    fun loadItems() {
+        val sharedPreferences = context.getSharedPreferences("recycler_view_adapter", Context.MODE_PRIVATE)
+        val hoursListJson = sharedPreferences.getString("hours_list", null)
+        val daysListJson = sharedPreferences.getString("days_list", null)
+        hoursList = Gson().fromJson(hoursListJson, object : TypeToken<ArrayList<ViewPagerListItem>>() {}.type) ?: ArrayList()
+        daysList = Gson().fromJson(daysListJson, object : TypeToken<ArrayList<ViewPagerListItem>>() {}.type) ?: ArrayList()
+    }
+
+
 
     private fun isHourInCurrentDay(hour: Int): Boolean {
         val currentCalendar = Calendar.getInstance()

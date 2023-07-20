@@ -158,7 +158,7 @@ class GettingDataFromRetrofit private constructor() {
             override fun onResponse(call: Call<ForecastDTO>, response: Response<ForecastDTO>) {
                 if (response.isSuccessful) {
                     forecastDTO = response.body()!!
-                    RecyclerViewAdapter(forecastDTO).fill(requireActivity, viewPager, context)
+                    RecyclerViewAdapter(forecastDTO, requireActivity).fill(requireActivity, viewPager, context)
                     CurrentCardAdapter(forecastDTO,context).fill(
                         listOfTextView,
                         cityDto.results[0].name,

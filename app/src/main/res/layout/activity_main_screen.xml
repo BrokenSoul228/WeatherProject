@@ -38,6 +38,7 @@
 
             <TextView
                 android:id="@+id/CityNameTextView"
+                android:fontFamily="@font/playkidz"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="-20dp"
@@ -55,6 +56,7 @@
                 android:layout_marginStart="8dp"
                 android:layout_marginTop="8dp"
                 android:text="@string/LastForecastUpdateTime"
+                android:fontFamily="@font/playkidz"
                 android:textSize="16sp"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
@@ -66,6 +68,7 @@
                 android:gravity="center"
                 android:text="Warning"
                 android:textColor="@color/white"
+                android:fontFamily="@font/playkidz"
                 android:textSize="16sp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toEndOf="@+id/CityNameTextView"
@@ -73,12 +76,14 @@
 
             <TextView
                 android:id="@+id/WindSpeed"
+                android:letterSpacing="0.1"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/WindSpeed"
                 android:textColor="@color/white"
                 android:textSize="14sp"
                 app:layout_constraintEnd_toEndOf="parent"
+                android:fontFamily="@font/playkidz"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/Temperature" />
 
@@ -89,6 +94,8 @@
                 android:gravity="center"
                 android:text="@string/Temperature"
                 android:textColor="@color/white"
+                android:letterSpacing="0.05"
+                android:fontFamily="@font/playkidz"
                 android:textSize="44sp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
@@ -102,6 +109,8 @@
                 android:textColor="@color/white"
                 android:textSize="14sp"
                 app:layout_constraintEnd_toEndOf="parent"
+                android:fontFamily="@font/playkidz"
+                android:letterSpacing="0.1"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/WindSpeed" />
 
@@ -112,9 +121,10 @@
                 android:layout_marginTop="3dp"
                 android:text="@string/TemperatureInterval"
                 android:textColor="@color/white"
-                android:textSize="14sp"
+                android:textSize="16sp"
                 app:layout_constraintBottom_toTopOf="@+id/constraintLayout"
                 app:layout_constraintEnd_toEndOf="parent"
+                android:fontFamily="@font/playkidz"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/WeatherCondition" />
 
@@ -131,6 +141,7 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:hint="Search here..."
+                    android:fontFamily="@font/playkidz"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"

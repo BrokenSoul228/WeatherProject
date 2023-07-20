@@ -5,6 +5,7 @@ import android.content.Context
 import android.widget.ImageView
 import android.widget.TextView
 import com.example.weatherappwithkotlin.R
+import com.example.weatherappwithkotlin.customenum.ConditionWarning
 import com.example.weatherappwithkotlin.customenum.ConditionWarning.BackgroundIcon.Companion.getBackgroundCondition
 import com.example.weatherappwithkotlin.customenum.ConditionWarning.Companion.getWeatherConditionWarning
 import com.example.weatherappwithkotlin.customenum.ConditionWarning.Forecast.Companion.getForecastCondition
@@ -34,7 +35,7 @@ class CurrentCardAdapter(private var forecastDTO: ForecastDTO,private val contex
                 hour = hour.substring(1)
             }
             if (day == currentDay.toString() && hour == currentHour.toString()) {
-                list[1].text = forecastDTO.hourly.temperature_2m[index].toString() + context.getText(R.string.Celsius)
+                list[1].text = "${forecastDTO.hourly.temperature_2m[index]}${context.getText(R.string.Celsius)}"
                 list[3].text = forecastDTO.hourly.windspeed_10m[index].toString() +" "+ context.getText(R.string.Speed)
             }
         }
