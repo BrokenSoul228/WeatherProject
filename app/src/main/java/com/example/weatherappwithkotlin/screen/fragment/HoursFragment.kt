@@ -7,8 +7,13 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+import com.example.weatherappwithkotlin.adapter.RecyclerViewAdapter
 import com.example.weatherappwithkotlin.databinding.FragmentHoursBinding
+import com.example.weatherappwithkotlin.dto.forecast.Daily
+import com.example.weatherappwithkotlin.dto.forecast.ForecastDTO
+import com.example.weatherappwithkotlin.dto.forecast.Hourly
 import com.example.weatherappwithkotlin.screen.ViewPagerListItem
 
 class HoursFragment(private val list: List<ViewPagerListItem>) : Fragment() {
@@ -28,6 +33,7 @@ class HoursFragment(private val list: List<ViewPagerListItem>) : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
         swipeRefresh = binding.swipeRefresh
         fillRecycleList()
         swipeRefresh.setOnRefreshListener {

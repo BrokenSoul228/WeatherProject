@@ -1,10 +1,8 @@
 package com.example.weatherappwithkotlin.screen
 
-import com.example.weatherappwithkotlin.retrofit.GettingDataFromRetrofit
 import android.content.Context
 import android.content.SharedPreferences
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -19,18 +17,19 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
 import androidx.viewpager2.widget.ViewPager2
 import com.example.weatherappwithkotlin.R
-import com.example.weatherappwithkotlin.adapter.RecyclerViewAdapter
 import com.example.weatherappwithkotlin.adapter.ViewPagerAdapter
 import com.example.weatherappwithkotlin.databinding.ActivityMainScreenBinding
 import com.example.weatherappwithkotlin.databinding.SearchbarLayoutItemBinding
 import com.example.weatherappwithkotlin.dto.Constants
-import com.example.weatherappwithkotlin.dto.forecast.Daily
-import com.example.weatherappwithkotlin.dto.forecast.ForecastDTO
-import com.example.weatherappwithkotlin.dto.forecast.Hourly
+import com.example.weatherappwithkotlin.retrofit.GettingDataFromRetrofit
 import com.example.weatherappwithkotlin.screen.fragment.DaysFragment
 import com.example.weatherappwithkotlin.screen.fragment.HoursFragment
+import com.google.android.gms.location.FusedLocationProviderClient
+import com.google.android.gms.location.LocationServices
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
+import com.google.gson.Gson
+import com.google.gson.reflect.TypeToken
 
 class MainScreen : Fragment() {
     private lateinit var binding: ActivityMainScreenBinding
@@ -42,7 +41,7 @@ class MainScreen : Fragment() {
     private lateinit var viewPageAdapter : ViewPagerAdapter
     private lateinit var sharedPref: SharedPreferences
     private lateinit var retrofitHelper : GettingDataFromRetrofit
-    private lateinit var forecastDTO : ForecastDTO
+    private lateinit var fLocationClient: FusedLocationProviderClient
 
     private lateinit var text1 : TextView
     private lateinit var text2 : TextView
@@ -53,6 +52,9 @@ class MainScreen : Fragment() {
     private lateinit var text7: TextView
     private lateinit var image : ImageView
 
+    private val PREFS_NAME = "WeatherAppPrefs"
+    private val HOURS_LIST_KEY = "hoursList"
+    private val DAYS_LIST_KEY = "daysList"
     private val tabLayoutHeaderList = listOf("Hours", "Days")
     private var hoursFragment = HoursFragment.newInstance(emptyList())
     private var daysFragment = DaysFragment.newInstance(emptyList())
@@ -85,25 +87,27 @@ class MainScreen : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        val sharedPreferences = context?.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
+
+        val hoursListJson = sharedPreferences?.getString(HOURS_LIST_KEY, null)
+        val daysListJson = sharedPreferences?.getString(DAYS_LIST_KEY, null)
+
+        if (!hoursListJson.isNullOrEmpty() && !daysListJson.isNullOrEmpty()) {
+            val gson = Gson()
+            val hoursListType = object : TypeToken<ArrayList<ViewPagerListItem>>() {}.type
+            val daysListType = object : TypeToken<ArrayList<ViewPagerListItem>>() {}.type
+
+            hoursFragment = HoursFragment.newInstance(gson.fromJson(hoursListJson, hoursListType))
+            daysFragment = DaysFragment.newInstance(gson.fromJson(daysListJson, daysListType))
+        }
+        pageViewInitializer = listOf(
+            hoursFragment,
+            daysFragment
+        )
         initAllFragments()
         loadForecastData()
-        val dailyData = Daily(emptyList(), emptyList(), emptyList(), emptyList())
-        val hourlyData = Hourly(emptyList(), emptyList(), emptyList(), emptyList())
 
-         forecastDTO = ForecastDTO(
-            daily = dailyData,
-            elevation = 100.0,
-            generationtime_ms = 1000.0,
-            hourly = hourlyData,
-            latitude = 40.7128,
-            longitude = -74.0060,
-            timezone = "America/New_York",
-            timezone_abbreviation = "EDT",
-            utc_offset_seconds = -14400
-        )
-        val recyclerViewAdapter = RecyclerViewAdapter(forecastDTO, requireContext())
-        recyclerViewAdapter.fill(requireActivity(), viewPager, requireContext())
-        recyclerViewAdapter.loadItems()
         retrofitHelper = GettingDataFromRetrofit.getInstance()
         searchBar.doAfterTextChanged {
                     retrofitHelper.getCityList(
@@ -111,7 +115,6 @@ class MainScreen : Fragment() {
                         searchBar.text.toString(),
                         searchBar
                     )
-
         }
 
         searchBar.setOnItemClickListener { parent, _ , position, _ ->
@@ -131,6 +134,7 @@ class MainScreen : Fragment() {
             inputDone.hideSoftInputFromWindow(searchBar.windowToken, 0)
         }
     }
+
 
     fun saveForecastData(cityName : String, condition : String, temp : String, windSpeed : String, maxMin : String, time : String, warning : String?, icon : Int) {
         sharedPref = requireActivity().getPreferences(Context.MODE_PRIVATE)
@@ -167,6 +171,7 @@ class MainScreen : Fragment() {
         image.setImageResource(icon)
     }
 
+
     private fun initAllFragments() {
         searchBar = binding.SearchBarPreviewText
         viewPager = binding.MainViewPager
@@ -179,8 +184,10 @@ class MainScreen : Fragment() {
         text6 = binding.LastForecastUpdateTime
         text7 = binding.InformationTableBackGround
         image = binding.BackgroundImage
+        fLocationClient = LocationServices.getFusedLocationProviderClient(requireContext())
         informationTableContainer = binding.InformationTableContainer
         viewPageAdapter = ViewPagerAdapter(activity as FragmentActivity, pageViewInitializer)
+        viewPageAdapter
         viewPager.adapter = viewPageAdapter
         TabLayoutMediator(tabLayout, viewPager) {tab, position -> tab.text = tabLayoutHeaderList[position]}.attach()
         val searchBarAdapter = ArrayAdapter(requireContext(), androidx.appcompat.R.layout.support_simple_spinner_dropdown_item, emptyList<String>())

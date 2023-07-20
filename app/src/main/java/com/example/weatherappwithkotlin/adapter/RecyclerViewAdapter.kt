@@ -2,7 +2,9 @@ package com.example.weatherappwithkotlin.adapter
 
 import android.annotation.SuppressLint
 import android.content.Context
+import android.content.SharedPreferences
 import android.icu.text.SimpleDateFormat
+import android.util.Log
 import androidx.fragment.app.FragmentActivity
 import androidx.viewpager2.widget.ViewPager2
 import com.example.weatherappwithkotlin.R
@@ -17,12 +19,14 @@ import com.google.gson.reflect.TypeToken
 import java.util.*
 
 class RecyclerViewAdapter(private val forecastDTO: ForecastDTO, private val context: Context) {
+
+    private val PREFS_NAME = "WeatherAppPrefs"
+    private val HOURS_LIST_KEY = "hoursList"
+    private val DAYS_LIST_KEY = "daysList"
+
     var hoursList = ArrayList<ViewPagerListItem>()
     var daysList = ArrayList<ViewPagerListItem>()
 
-    init {
-        loadItems()
-    }
     @SuppressLint("SimpleDateFormat")
     fun fill(requireActivity: FragmentActivity, viewPager: ViewPager2, context: Context) {
             val currentHour = Calendar.getInstance().get(Calendar.HOUR_OF_DAY)
@@ -65,28 +69,23 @@ class RecyclerViewAdapter(private val forecastDTO: ForecastDTO, private val cont
             }
 
         viewPager.adapter = ViewPagerAdapter(requireActivity, listOf(HoursFragment.newInstance(hoursList), DaysFragment.newInstance(daysList)))
-        saveItems(requireActivity)
+        saveData()
+        Log.d("ASAAAAAAAAAA", hoursList.toString())
     }
 
-    fun saveItems(context: Context) {
-        val sharedPreferences = context.getSharedPreferences("recycler_view_adapter", Context.MODE_PRIVATE)
-        sharedPreferences.edit().apply {
-            clear()
-            putString("hours_list", Gson().toJson(hoursList))
-            putString("days_list", Gson().toJson(daysList))
-            apply()
-        }
+    fun saveData() {
+        val sharedPreferences = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
+        val editor: SharedPreferences.Editor = sharedPreferences.edit()
+
+        val gson = Gson()
+        val hoursListJson = gson.toJson(hoursList)
+        val daysListJson = gson.toJson(daysList)
+
+        editor.putString(HOURS_LIST_KEY, hoursListJson)
+        editor.putString(DAYS_LIST_KEY, daysListJson)
+
+        editor.apply()
     }
-
-    fun loadItems() {
-        val sharedPreferences = context.getSharedPreferences("recycler_view_adapter", Context.MODE_PRIVATE)
-        val hoursListJson = sharedPreferences.getString("hours_list", null)
-        val daysListJson = sharedPreferences.getString("days_list", null)
-        hoursList = Gson().fromJson(hoursListJson, object : TypeToken<ArrayList<ViewPagerListItem>>() {}.type) ?: ArrayList()
-        daysList = Gson().fromJson(daysListJson, object : TypeToken<ArrayList<ViewPagerListItem>>() {}.type) ?: ArrayList()
-    }
-
-
 
     private fun isHourInCurrentDay(hour: Int): Boolean {
         val currentCalendar = Calendar.getInstance()

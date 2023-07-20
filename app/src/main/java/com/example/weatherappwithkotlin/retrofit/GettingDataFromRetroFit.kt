@@ -185,7 +185,6 @@ class GettingDataFromRetrofit private constructor() {
                                 forecastDTO.hourly.windspeed_10m[index].toString() + " " + context.getText(R.string.Speed),
                                 forecastDTO.daily.temperature_2m_min[0].toString() + "${context.getText(
                                     R.string.Celsius)} / " + forecastDTO.daily.temperature_2m_max[0].toString() + context.getText(R.string.Celsius),
-
                                 forecastDTO.daily.time[0],
                                 getWeatherConditionWarning(forecastDTO.hourly.weathercode[0]),
                                 ConditionWarning.BackgroundIcon.getBackgroundCondition(forecastDTO.hourly.weathercode[0])
