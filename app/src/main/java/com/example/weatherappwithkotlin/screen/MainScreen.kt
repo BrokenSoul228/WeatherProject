@@ -3,6 +3,7 @@ package com.example.weatherappwithkotlin.screen
 import android.content.Context
 import android.content.SharedPreferences
 import android.os.Bundle
+import android.text.Editable
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -110,11 +111,11 @@ class MainScreen : Fragment() {
 
         retrofitHelper = GettingDataFromRetrofit.getInstance()
         searchBar.doAfterTextChanged {
-                    retrofitHelper.getCityList(
-                        requireContext(),
-                        searchBar.text.toString(),
-                        searchBar
-                    )
+            retrofitHelper.getCityList(
+                requireContext(),
+                searchBar.text.toString(),
+                searchBar
+            )
         }
 
         searchBar.setOnItemClickListener { parent, _ , position, _ ->
@@ -130,6 +131,8 @@ class MainScreen : Fragment() {
                     it
                 )
             }
+            searchBar.text = null
+            searchBar.hint = null
             val inputDone = requireActivity().getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
             inputDone.hideSoftInputFromWindow(searchBar.windowToken, 0)
         }
