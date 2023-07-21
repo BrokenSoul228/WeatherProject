@@ -11,3 +11,4 @@ data class ForecastDTO(
     val timezone_abbreviation: String,
     val utc_offset_seconds: Int
 )
+
