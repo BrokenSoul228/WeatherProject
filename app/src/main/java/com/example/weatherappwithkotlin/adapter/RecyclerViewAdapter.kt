@@ -1,5 +1,6 @@
 package com.example.weatherappwithkotlin.adapter
 
+import DaysFragment
 import android.annotation.SuppressLint
 import android.content.Context
 import android.content.SharedPreferences
@@ -12,10 +13,8 @@ import com.example.weatherappwithkotlin.customenum.ConditionWarning.Forecast.Com
 import com.example.weatherappwithkotlin.customenum.ConditionWarning.IconCollection.Companion.getIconCondition
 import com.example.weatherappwithkotlin.dto.forecast.ForecastDTO
 import com.example.weatherappwithkotlin.screen.ViewPagerListItem
-import com.example.weatherappwithkotlin.screen.fragment.DaysFragment
 import com.example.weatherappwithkotlin.screen.fragment.HoursFragment
 import com.google.gson.Gson
-import com.google.gson.reflect.TypeToken
 import java.util.*
 
 class RecyclerViewAdapter(private val forecastDTO: ForecastDTO, private val context: Context) {

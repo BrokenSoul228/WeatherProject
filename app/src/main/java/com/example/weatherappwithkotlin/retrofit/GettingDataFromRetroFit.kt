@@ -1,6 +1,5 @@
 package com.example.weatherappwithkotlin.retrofit
 
-import android.annotation.SuppressLint
 import android.content.Context
 import android.os.Handler
 import android.os.Looper
@@ -74,12 +73,12 @@ class GettingDataFromRetrofit private constructor() {
         var cityDTO: CityDTO
 
         json.enqueue(object : Callback<CityDTO> {
-            @SuppressLint("SuspiciousIndentation")
+
             override fun onResponse(call: Call<CityDTO>, response: Response<CityDTO>) {
                 if (response.isSuccessful) {
                     cityDTO = response.body()!!
                     if (cityDTO.results.isEmpty()) {
-                        if (name.length >= 3)
+                        if (name.length >= 3){}
                             Toast.makeText(requiredContext, "City not Found", Toast.LENGTH_LONG).show()
                     } else {
                         val list = arrayListOf<String>()

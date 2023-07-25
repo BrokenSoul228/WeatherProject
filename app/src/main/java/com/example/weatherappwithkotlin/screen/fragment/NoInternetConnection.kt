@@ -28,7 +28,7 @@ class NoInternetConnection : Fragment() {
                 val transaction = requireActivity().supportFragmentManager.beginTransaction()
                 transaction.remove(this@NoInternetConnection)
                 transaction.replace(R.id.nav_container, fragment).commit()
-            } else {}
+            }
         }
         return view
     }

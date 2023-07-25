@@ -5,7 +5,6 @@ import android.content.Context
 import android.widget.ImageView
 import android.widget.TextView
 import com.example.weatherappwithkotlin.R
-import com.example.weatherappwithkotlin.customenum.ConditionWarning
 import com.example.weatherappwithkotlin.customenum.ConditionWarning.BackgroundIcon.Companion.getBackgroundCondition
 import com.example.weatherappwithkotlin.customenum.ConditionWarning.Companion.getWeatherConditionWarning
 import com.example.weatherappwithkotlin.customenum.ConditionWarning.Forecast.Companion.getForecastCondition

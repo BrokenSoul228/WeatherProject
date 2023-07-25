@@ -15,7 +15,6 @@
         android:src="@drawable/main_fragment_background"
         tools:ignore="MissingConstraints" />
 
-
     <androidx.cardview.widget.CardView
         android:id="@+id/InformationTable"
         android:layout_width="match_parent"

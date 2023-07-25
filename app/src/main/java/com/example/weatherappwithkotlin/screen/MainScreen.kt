@@ -1,9 +1,13 @@
 package com.example.weatherappwithkotlin.screen
 
+import DaysFragment
+import android.annotation.SuppressLint
 import android.content.Context
 import android.content.SharedPreferences
 import android.os.Bundle
 import android.text.Editable
+import android.text.TextWatcher
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -23,7 +27,6 @@ import com.example.weatherappwithkotlin.databinding.ActivityMainScreenBinding
 import com.example.weatherappwithkotlin.databinding.SearchbarLayoutItemBinding
 import com.example.weatherappwithkotlin.dto.Constants
 import com.example.weatherappwithkotlin.retrofit.GettingDataFromRetrofit
-import com.example.weatherappwithkotlin.screen.fragment.DaysFragment
 import com.example.weatherappwithkotlin.screen.fragment.HoursFragment
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
@@ -31,6 +34,11 @@ import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 
 class MainScreen : Fragment() {
     private lateinit var binding: ActivityMainScreenBinding
@@ -56,9 +64,11 @@ class MainScreen : Fragment() {
     private val PREFS_NAME = "WeatherAppPrefs"
     private val HOURS_LIST_KEY = "hoursList"
     private val DAYS_LIST_KEY = "daysList"
+    private val searchHistory = mutableListOf<String>()
     private val tabLayoutHeaderList = listOf("Hours", "Days")
     private var hoursFragment = HoursFragment.newInstance(emptyList())
     private var daysFragment = DaysFragment.newInstance(emptyList())
+    private var searchHistorySet = mutableSetOf<String>()
 
     private var pageViewInitializer = listOf(
         hoursFragment,
@@ -66,7 +76,7 @@ class MainScreen : Fragment() {
     )
 
 
-    override fun onCreateView( //create view object with inflater
+    override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
@@ -82,12 +92,15 @@ class MainScreen : Fragment() {
             container,
             false
         )
-
         return binding.root
     }
 
+    @SuppressLint("CommitPrefEdits")
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        searchHistory.addAll(loadSearchHistory())
+        setupAdapter()
 
         val sharedPreferences = context?.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
 
@@ -118,11 +131,13 @@ class MainScreen : Fragment() {
             )
         }
 
-        searchBar.setOnItemClickListener { parent, _ , position, _ ->
-            val selectedCity = parent.getItemAtPosition(position)
+        searchBar.setOnItemClickListener { parent, _, position, _ ->
+            val selectedCity = parent.getItemAtPosition(position).toString()
+            updateSearchHistory(selectedCity)
+            Log.d("STRING", searchHistorySet.toString())
             context?.let {
                 retrofitHelper.getForecast(
-                    selectedCity.toString(),
+                    selectedCity,
                     requireActivity(),
                     viewPager,
                     listOf(text1, text2, text3, text4, text5, text6, text7),
@@ -138,6 +153,33 @@ class MainScreen : Fragment() {
         }
     }
 
+    private fun loadSearchHistory() : List<String>{
+        val sharedCity = context?.getSharedPreferences("STRING", Context.MODE_PRIVATE)
+        val searchHistoryJson = sharedCity?.getString("STRING", null)
+        val gson = Gson()
+        val searchHistoryType = object : TypeToken<Set<String>>() {}.type
+        return (gson.fromJson(searchHistoryJson, searchHistoryType) ?: emptySet<String>()).toList()
+    }
+
+    private fun updateSearchHistory(newCity : String){
+        searchHistorySet.add(newCity)
+        if (searchHistorySet.size > 5){
+            val iterator = searchHistorySet.iterator()
+            for (i in 0 until searchHistorySet.size - 5){
+                iterator.next()
+                iterator.remove()
+            }
+        }
+
+        val gson = Gson()
+        val searchHistoryJson = gson.toJson(searchHistorySet)
+        val sharedCity = context?.getSharedPreferences("STRING", Context.MODE_PRIVATE)
+        val editor: SharedPreferences.Editor = sharedCity?.edit() ?: return
+        editor.putString("STRING", searchHistoryJson)
+        editor.apply()
+        val searchBarAdapter = ArrayAdapter(requireContext(), android.R.layout.simple_dropdown_item_1line, searchHistorySet.toList())
+        searchBar.setAdapter(searchBarAdapter)
+    }
 
     fun saveForecastData(cityName : String, condition : String, temp : String, windSpeed : String, maxMin : String, time : String, warning : String?, icon : Int) {
         sharedPref = requireActivity().getPreferences(Context.MODE_PRIVATE)
@@ -151,6 +193,12 @@ class MainScreen : Fragment() {
         editor.putString(Constants.WARNING, warning)
         editor.putInt(Constants.Icon, icon)
         editor.apply()
+    }
+
+    private fun setupAdapter() {
+        searchBar = binding.SearchBarPreviewText
+        val searchBarAdapter = ArrayAdapter(requireContext(), android.R.layout.simple_dropdown_item_1line, searchHistory)
+        searchBar.setAdapter(searchBarAdapter)
     }
 
     private fun loadForecastData() {
