@@ -78,8 +78,9 @@ class GettingDataFromRetrofit private constructor() {
                 if (response.isSuccessful) {
                     cityDTO = response.body()!!
                     if (cityDTO.results.isEmpty()) {
-                        if (name.length >= 3){}
-                            Toast.makeText(requiredContext, "City not Found", Toast.LENGTH_LONG).show()
+                        if (name.length >= 4){
+                            showToastWithDelay(requiredContext, message = "City not found", 1000)
+                        }
                     } else {
                         val list = arrayListOf<String>()
                         for (item in cityDTO.results) {

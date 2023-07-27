@@ -1,18 +1,19 @@
 package com.example.weatherappwithkotlin.screen.fragment
 
 import android.content.Context
+import android.content.Intent
 import android.net.ConnectivityManager
 import android.net.NetworkCapabilities
-import android.os.Build
 import android.os.Bundle
+import android.provider.Settings
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
-import androidx.annotation.RequiresApi
 import androidx.fragment.app.Fragment
 import com.example.weatherappwithkotlin.R
 import com.example.weatherappwithkotlin.screen.MainScreen
+import com.google.android.material.snackbar.Snackbar
 
 class NoInternetConnection : Fragment() {
 
@@ -28,9 +29,28 @@ class NoInternetConnection : Fragment() {
                 val transaction = requireActivity().supportFragmentManager.beginTransaction()
                 transaction.remove(this@NoInternetConnection)
                 transaction.replace(R.id.nav_container, fragment).commit()
+            } else {
+                showSnackbarWithSettingsButton()
             }
         }
         return view
+    }
+
+    private fun showSnackbarWithSettingsButton() {
+        val snackbar = Snackbar.make(
+            requireView(),
+            "No internet connection!",
+            Snackbar.LENGTH_LONG
+        )
+        snackbar.setAction("Settings") {
+            openPhoneSettings()
+        }
+        snackbar.show()
+    }
+
+    private fun openPhoneSettings() {
+        val settingsIntent = Intent(Settings.ACTION_WIFI_SETTINGS)
+        startActivity(settingsIntent)
     }
 
     private fun isInternetAvailable(): Boolean {

@@ -24,7 +24,7 @@ class CurrentCardAdapter(private var forecastDTO: ForecastDTO,private val contex
         val currentHour = Calendar.getInstance().get(Calendar.HOUR_OF_DAY)
 
         for (index in forecastDTO.hourly.weathercode.indices) {
-            var date = forecastDTO.hourly.time[index]
+            val date = forecastDTO.hourly.time[index]
             var day = date.substring(8, 10)
             if (day.startsWith("0")) {
                 day = day.substring(1)
@@ -60,9 +60,8 @@ class CurrentCardAdapter(private var forecastDTO: ForecastDTO,private val contex
 
     private fun getImageResourceIds(): List<Int> {
         return listOf(R.drawable.clearsky, R.drawable.cloudysky,R.drawable.fog1, R.drawable.littlerain,
-           R.drawable.moderaterain,R.drawable.hardrain, R.drawable.snowstorm, R.drawable.moderatesnow,
+            R.drawable.moderaterain,R.drawable.hardrain, R.drawable.snowstorm, R.drawable.moderatesnow,
             R.drawable.littlesnow,R.drawable.thunder)
     }
 
 }
-
