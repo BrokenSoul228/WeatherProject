@@ -17,10 +17,8 @@ class DaysFragment(private val list: List<ViewPagerListItem>) : Fragment() {
 
     private lateinit var binding: FragmentDaysBinding
     private lateinit var viewPagerListAdapter: ViewPagerListAdapter
-    private lateinit var swipeRefresh: SwipeRefreshLayout
     private val layoutManager: LinearLayoutManager by lazy { LinearLayoutManager(requireActivity()) }
 
-    private var isFirstRefresh = true
     private var isListRefreshed = true
     private var lastUpdateTime: Long = 0
 
@@ -32,24 +30,6 @@ class DaysFragment(private val list: List<ViewPagerListItem>) : Fragment() {
         lastUpdateTime = Date().time
         fillRecycleList()
         return binding.root
-    }
-
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-        swipeRefresh = binding.swipeRefresh
-        swipeRefresh.setOnRefreshListener {
-            val currentTime = Date().time
-            if (isListRefreshed) {
-                isListRefreshed = false
-                if (isFirstRefresh && currentTime - lastUpdateTime >= 1000) {
-                    Toast.makeText(context, "Do new request", Toast.LENGTH_SHORT).show()
-                    isFirstRefresh = true
-                }
-            }
-            lastUpdateTime = currentTime
-            swipeRefresh.isRefreshing = false
-        }
-
     }
 
     private fun fillRecycleList() {

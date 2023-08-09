@@ -19,6 +19,7 @@ class MainActivity : AppCompatActivity() {
 
         connectivityManager = getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
         networkConnection = CheckNetworkConnection(connectivityManager)
+//        switch()
         switchScreenNetwork()
     }
 
@@ -28,6 +29,12 @@ class MainActivity : AppCompatActivity() {
             .replace(R.id.MainScreenSwitcher, fragment)
             .commit()
     }
+//    private fun switch() {
+//        val fragment = if (networkConnection.isInternetAvailable()) SecondScreen() else NoInternetConnection()
+//        supportFragmentManager.beginTransaction()
+//            .replace(R.id.MainScreenSwitcher, fragment)
+//            .commit()
+//    }
 
     override fun onStart() {
         super.onStart()

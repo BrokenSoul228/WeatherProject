@@ -15,7 +15,6 @@ class HoursFragment(private val list: List<ViewPagerListItem>) : Fragment() {
 
     private lateinit var binding: FragmentHoursBinding
     private lateinit var viewPagerListAdapter: ViewPagerListAdapter
-    private lateinit var swipeRefresh: SwipeRefreshLayout
     private val layoutManager: LinearLayoutManager by lazy { LinearLayoutManager(requireActivity()) }
 
     override fun onCreateView(
@@ -28,13 +27,7 @@ class HoursFragment(private val list: List<ViewPagerListItem>) : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
-        swipeRefresh = binding.swipeRefresh
         fillRecycleList()
-        swipeRefresh.setOnRefreshListener {
-            fillRecycleList()
-            swipeRefresh.isRefreshing = false
-        }
     }
 
     private fun fillRecycleList() {

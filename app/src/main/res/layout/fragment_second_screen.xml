@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:id="@+id/info">
+    android:id="@+id/info2">
 
     <ImageView
         android:id="@+id/BackgroundImage"
@@ -16,7 +16,7 @@
         tools:ignore="MissingConstraints" />
 
     <androidx.cardview.widget.CardView
-        android:id="@+id/InformationTable"
+        android:id="@+id/InformationTable2"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginStart="5dp"
@@ -36,11 +36,12 @@
             android:layout_height="match_parent">
 
             <TextView
+                android:background="@color/black"
                 android:id="@+id/CityNameTextView"
+                android:fontFamily="@font/playkidz"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="-20dp"
-                android:fontFamily="@font/playkidz"
                 android:text="@string/CityNameTextView"
                 android:textColor="@color/white"
                 android:textSize="20sp"
@@ -53,52 +54,37 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
-                android:layout_marginTop="8dp"
-                android:fontFamily="@font/playkidz"
-                android:text="@string/LastForecastUpdateTime"
                 android:textColor="@color/white"
+                android:layout_marginTop="8dp"
+                android:text="@string/LastForecastUpdateTime"
+                android:fontFamily="@font/playkidz"
                 android:textSize="16sp"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
-
-            <Spinner
-                android:id="@+id/itemSpinner"
-                android:layout_width="126dp"
-                android:layout_height="43dp"
-                android:layout_marginStart="40dp"
-                android:layout_marginBottom="60dp"
-                app:layout_constraintBottom_toTopOf="@+id/WindSpeed"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toEndOf="@+id/CityNameTextView"
-                app:layout_constraintTop_toTopOf="parent">
-
-            </Spinner>
 
             <TextView
                 android:id="@+id/InformationTableBackGround"
                 android:layout_width="99dp"
                 android:layout_height="38dp"
-                android:enabled="true"
-                android:fontFamily="@font/playkidz"
                 android:gravity="center"
                 android:text="Warning"
                 android:textColor="@color/white"
+                android:fontFamily="@font/playkidz"
                 android:textSize="16sp"
-                android:visibility="invisible"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toEndOf="@+id/CityNameTextView"
                 tools:layout_editor_absoluteY="2dp" />
 
             <TextView
                 android:id="@+id/WindSpeed"
+                android:letterSpacing="0.1"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:fontFamily="@font/playkidz"
-                android:letterSpacing="0.1"
                 android:text="@string/WindSpeed"
                 android:textColor="@color/white"
                 android:textSize="14sp"
                 app:layout_constraintEnd_toEndOf="parent"
+                android:fontFamily="@font/playkidz"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/Temperature" />
 
@@ -106,11 +92,11 @@
                 android:id="@+id/Temperature"
                 android:layout_width="296dp"
                 android:layout_height="76dp"
-                android:fontFamily="@font/playkidz"
                 android:gravity="center"
-                android:letterSpacing="0.05"
                 android:text="@string/Temperature"
                 android:textColor="@color/white"
+                android:letterSpacing="0.05"
+                android:fontFamily="@font/playkidz"
                 android:textSize="44sp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
@@ -120,12 +106,12 @@
                 android:id="@+id/WeatherCondition"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:fontFamily="@font/playkidz"
-                android:letterSpacing="0.1"
                 android:text="@string/WeatherCondition"
                 android:textColor="@color/white"
                 android:textSize="14sp"
                 app:layout_constraintEnd_toEndOf="parent"
+                android:fontFamily="@font/playkidz"
+                android:letterSpacing="0.1"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/WindSpeed" />
 
@@ -134,12 +120,12 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="3dp"
-                android:fontFamily="@font/playkidz"
                 android:text="@string/TemperatureInterval"
                 android:textColor="@color/white"
                 android:textSize="16sp"
                 app:layout_constraintBottom_toTopOf="@+id/constraintLayout"
                 app:layout_constraintEnd_toEndOf="parent"
+                android:fontFamily="@font/playkidz"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/WeatherCondition" />
 
@@ -155,11 +141,10 @@
                     android:id="@+id/SearchBarPreviewText"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:completionThreshold="1"
-                    android:fontFamily="@font/playkidz"
                     android:hint="Search here..."
-                    android:textColor="@color/white"
                     android:textColorHint="#AFAFAF"
+                    android:fontFamily="@font/playkidz"
+                    android:textColor="@color/white"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
