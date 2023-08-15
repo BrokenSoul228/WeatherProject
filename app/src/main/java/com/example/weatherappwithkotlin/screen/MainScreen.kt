@@ -3,7 +3,6 @@ package com.example.weatherappwithkotlin.screen
 import android.annotation.SuppressLint
 import android.content.Context
 import android.content.SharedPreferences
-import android.media.Image
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -16,12 +15,14 @@ import android.widget.AutoCompleteTextView
 import android.widget.ImageView
 import android.widget.Spinner
 import android.widget.TextView
+import android.widget.Toast
 import androidx.collection.arraySetOf
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.widget.doAfterTextChanged
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
 import androidx.viewpager2.widget.ViewPager2
+import com.example.weatherappwithkotlin.LoadingScreen
 import com.example.weatherappwithkotlin.R
 import com.example.weatherappwithkotlin.adapter.ViewPagerAdapter
 import com.example.weatherappwithkotlin.databinding.ActivityMainScreenBinding
@@ -92,11 +93,10 @@ class MainScreen : Fragment() {
         )
         return binding.root
     }
-
-    @SuppressLint("CommitPrefEdits")
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        val loadingScreen = LoadingScreen(this)
         val sharedPreferences = context?.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
 
         val hoursListJson = sharedPreferences?.getString(HOURS_LIST_KEY, null)
@@ -116,8 +116,8 @@ class MainScreen : Fragment() {
         )
         initAll()
         loadForecastData()
-
-        val adapterOfCity = ArrayAdapter(requireContext(), androidx.constraintlayout.widget.R.layout.support_simple_spinner_dropdown_item, popularCity)
+        loadingScreen.startLoadingDialog(requireContext())
+        val adapterOfCity = ArrayAdapter(requireContext(), androidx.constraintlayout.widget.R.layout.select_dialog_item_material, popularCity)
         adapterOfCity.notifyDataSetChanged()
         spinner.adapter = adapterOfCity
         Log.d("STRING SET", popularCity.toString())
@@ -135,7 +135,6 @@ class MainScreen : Fragment() {
                 searchBar.text.toString(),
                 searchBar
             )
-
         }
 
         searchBar.setOnItemClickListener { parent, _, position, _ ->
@@ -163,26 +162,26 @@ class MainScreen : Fragment() {
             inputDone.hideSoftInputFromWindow(searchBar.windowToken, 0)
         }
         spinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
-            override fun onItemSelected(
+            @SuppressLint("SuspiciousIndentation")
+            override  fun onItemSelected(
                 parent: AdapterView<*>?,
                 view: View?,
                 position: Int,
                 id: Long
             ) {
+//                Toast.makeText(context, "Wait, do new request", Toast.LENGTH_SHORT).show()
                 val selectedCity = popularCity[position]
-                retrofitHelper.getForecast(
-                    selectedCity,
-                    requireActivity(),
-                    viewPager,
-                    listOf(text1, text2, text3, text4, text5, text6, text7),
-                    image,
-                    this@MainScreen, // Make sure to reference your fragment instance
-                    requireContext()
-                )
+                        retrofitHelper.getForecast(
+                        selectedCity,
+                        requireActivity(),
+                        viewPager,
+                        listOf(text1, text2, text3, text4, text5, text6, text7),
+                        image,
+                        this@MainScreen,
+                        requireContext()
+                        )
             }
-
             override fun onNothingSelected(parent: AdapterView<*>?) {
-                // Do nothing
             }
         }
         loadPopularCity()
