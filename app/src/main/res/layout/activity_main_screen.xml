@@ -62,9 +62,12 @@
                 app:layout_constraintTop_toTopOf="parent" />
 
             <Spinner
+                android:alpha="0.7"
                 android:id="@+id/itemSpinner"
+                android:background="@android:drawable/editbox_background"
                 android:layout_width="126dp"
                 android:layout_height="43dp"
+                android:fontFamily="@font/playkidz"
                 android:layout_marginStart="40dp"
                 android:layout_marginBottom="60dp"
                 app:layout_constraintBottom_toTopOf="@+id/WindSpeed"
