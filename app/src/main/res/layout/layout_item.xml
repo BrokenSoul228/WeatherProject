@@ -17,7 +17,7 @@
         <TextView
             android:letterSpacing="0.1"
             android:id="@+id/Date"
-            android:layout_width="wrap_content"
+            android:layout_width="150dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="10dp"
             android:layout_marginTop="10dp"
@@ -52,13 +52,12 @@
             app:srcCompat="@drawable/ic_launcher_foreground" />
 
         <TextView
-            android:letterSpacing="0.15"
             android:id="@+id/Temperature"
-            android:fontFamily="@font/playkidz"
-            android:layout_width="0dp"
+            android:layout_width="wrap_content"
             android:layout_height="0dp"
-            android:layout_marginStart="40dp"
+            android:fontFamily="@font/playkidz"
             android:gravity="center"
+            android:letterSpacing="0.15"
             android:text="sdsadfasf"
             android:textColor="@color/white"
             android:textSize="18sp"
