@@ -1,5 +1,7 @@
 package com.example.weatherappwithkotlin.customenum
 
+import android.util.Log
+import android.widget.Toast
 import com.example.weatherappwithkotlin.R
 
 enum class ConditionWarning (private val code : List<Int>, private val message : String) {
@@ -22,6 +24,7 @@ enum class ConditionWarning (private val code : List<Int>, private val message :
         PARTLY_CLOUDY(2, "Partly cloudy"),
         OVERCAST(3, "Overcast"),
         FOG_AND_DEPOSITING_RIME(45, "Fog and depositing rime fog"),
+        FOG_AND_DEPOSITING_RIMEE(46, "Fog and depositing rime fog"),
         DRIZZLE_LIGHT(51, "Drizzle: Light intensity"),
         DRIZZLE_MODERATE(53, "Drizzle: Moderate intensity"),
         DRIZZLE_DENSE(55, "Drizzle: Dense intensity"),
@@ -57,7 +60,7 @@ enum class ConditionWarning (private val code : List<Int>, private val message :
         CLEAR(listOf(0,1), R.drawable.z_sunny_foreground),
         PARTLY_CLOUDY(listOf(2), R.drawable.z_partly_cloudy_foreground),
         MAINLY_CLOUDY(listOf(3), R.drawable.z_partly_cloudy3_foreground),
-        FOG(listOf(45, 48), R.drawable.z_cloudy_foreground),
+        FOG(listOf(45,46, 48), R.drawable.z_cloudy_foreground),
         LITTLE_DRIZZLE(listOf(51, 56, 57,61, 80), R.drawable.z_little_rain_foreground),
         MODERATE_DRIZZLE(listOf(53, 63 ,81,77), R.drawable.z_medium_rain_foreground),
         POWER_DRIZZLE(listOf(55, 65, 82), R.drawable.z_powerful_rain_foreground),
@@ -77,7 +80,7 @@ enum class ConditionWarning (private val code : List<Int>, private val message :
     enum class BackgroundIcon(private val code: List<Int>, private val message: Int) {
         CLEAR(listOf(0,1), R.drawable.clearsky),
         PARTLY_CLOUDY(listOf(2,3), R.drawable.cloudysky),
-        FOG(listOf(45, 48), R.drawable.fog1),
+        FOG(listOf(45,46, 48), R.drawable.fog1),
         LITTLE_DRIZZLE(listOf(51, 56, 57,61, 80), R.drawable.littlerain),
         MODERATE_DRIZZLE(listOf(53,63, 81,66, 67), R.drawable.moderaterain),
         POWER_DRIZZLE(listOf(55,65, 82), R.drawable.hardrain),
@@ -89,7 +92,7 @@ enum class ConditionWarning (private val code : List<Int>, private val message :
         companion object {
             fun getBackgroundCondition(code: Int): Int {
                 val matchingCondition = BackgroundIcon.values().find { code in it.code }
-                return matchingCondition?.message ?: R.drawable.z_sunny_foreground
+                return matchingCondition?.message ?: R.drawable.clearsky
             }
         }
     }
