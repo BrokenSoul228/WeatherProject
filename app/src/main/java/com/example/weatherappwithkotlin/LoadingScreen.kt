@@ -1,25 +1,17 @@
 package com.example.weatherappwithkotlin
 
-import android.content.ContentResolver
 import android.content.Context
 import android.net.ConnectivityManager
-import android.os.Build
 import android.os.Handler
-import android.os.HandlerThread
 import android.os.Looper
-import android.provider.Settings.Global.getString
-import android.util.Log
-import android.view.LayoutInflater
 import android.view.View
 import android.widget.Button
 import android.widget.ImageView
 import android.widget.ProgressBar
 import android.widget.TextView
 import android.widget.Toast
-import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.Fragment
-import kotlin.coroutines.coroutineContext
 
 class LoadingScreen(private val myActivity: Fragment) {
     private var dialog: AlertDialog? = null
@@ -41,35 +33,36 @@ class LoadingScreen(private val myActivity: Fragment) {
         if ((downSpeed != null) && (downSpeed > 80)) {
             Handler(Looper.getMainLooper()).postDelayed({
                 showButton()
-                Toast.makeText(context, "", Toast.LENGTH_SHORT).show()
-            }, 2800) // Show button after 3 seconds for fast speeds
+//                Toast.makeText(context, "", Toast.LENGTH_SHORT).show()
+            }, 2800)
         }
         else if(downSpeed in 50..79) {
             Handler(Looper.getMainLooper()).postDelayed({
                 showButton()
-                Toast.makeText(context, "", Toast.LENGTH_SHORT).show()
+//                Toast.makeText(context, "", Toast.LENGTH_SHORT).show()
             }, 3000)
         }
         else if(downSpeed in 20..49) {
             Handler(Looper.getMainLooper()).postDelayed({
                 showButton()
-                Toast.makeText(context, "", Toast.LENGTH_SHORT).show()
+//                Toast.makeText(context, "", Toast.LENGTH_SHORT).show()
             }, 3200)}
         else if(downSpeed in 10..19) {
             Handler(Looper.getMainLooper()).postDelayed({
                 showButton()
-                Toast.makeText(context, "", Toast.LENGTH_SHORT).show()
-            }, 4000) // Show button after 5 seconds for slow speeds
+//                Toast.makeText(context, "", Toast.LENGTH_SHORT).show()
+            }, 4000)
         }
         else if(downSpeed in 3..9) {
             Handler(Looper.getMainLooper()).postDelayed({
                 showButton()
-                Toast.makeText(context, "", Toast.LENGTH_SHORT).show()
-            }, 4500) // Show button after 5 seconds for slow speeds
+//                Toast.makeText(context, "", Toast.LENGTH_SHORT).show()
+            }, 4500)
         }
         else {
             Handler(Looper.getMainLooper()).postDelayed({
                 showButton()
+                warningText.text = "Can't refresh data, check your internet connection"
                 Toast.makeText(context, "So slow internet", Toast.LENGTH_SHORT).show()
             }, 7000)
         }
