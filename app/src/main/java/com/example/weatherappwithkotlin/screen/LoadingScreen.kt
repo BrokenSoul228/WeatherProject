@@ -1,5 +1,6 @@
-package com.example.weatherappwithkotlin
+package com.example.weatherappwithkotlin.screen
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.net.ConnectivityManager
 import android.os.Handler
@@ -12,15 +13,18 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.Fragment
+import com.example.weatherappwithkotlin.R
 
 class LoadingScreen(private val myActivity: Fragment) {
-    private var dialog: AlertDialog? = null
+
     private lateinit var closeBTN: Button
     private lateinit var warningText: TextView
     private lateinit var loading: TextView
     private lateinit var doneImage: ImageView
     private lateinit var bar: ProgressBar
+    private var dialog: AlertDialog? = null
 
+    @SuppressLint("SetTextI18n")
     fun startLoadingDialog(context: Context) {
         val cm = context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
         // Network Capabilities of Active Network
@@ -33,29 +37,34 @@ class LoadingScreen(private val myActivity: Fragment) {
         if ((downSpeed != null) && (downSpeed > 80)) {
             Handler(Looper.getMainLooper()).postDelayed({
                 showButton()
+                warningText.text = "The weather has been updated"
 //                Toast.makeText(context, "", Toast.LENGTH_SHORT).show()
             }, 2800)
         }
         else if(downSpeed in 50..79) {
             Handler(Looper.getMainLooper()).postDelayed({
                 showButton()
+                warningText.text = "The weather has been updated"
 //                Toast.makeText(context, "", Toast.LENGTH_SHORT).show()
             }, 3000)
         }
         else if(downSpeed in 20..49) {
             Handler(Looper.getMainLooper()).postDelayed({
                 showButton()
+                warningText.text = "The weather has been updated"
 //                Toast.makeText(context, "", Toast.LENGTH_SHORT).show()
             }, 3200)}
         else if(downSpeed in 10..19) {
             Handler(Looper.getMainLooper()).postDelayed({
                 showButton()
+                warningText.text = "The weather has been updated"
 //                Toast.makeText(context, "", Toast.LENGTH_SHORT).show()
             }, 4000)
         }
         else if(downSpeed in 3..9) {
             Handler(Looper.getMainLooper()).postDelayed({
                 showButton()
+                warningText.text = "The weather has been updated"
 //                Toast.makeText(context, "", Toast.LENGTH_SHORT).show()
             }, 4500)
         }

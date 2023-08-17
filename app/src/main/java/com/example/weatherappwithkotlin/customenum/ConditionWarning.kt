@@ -1,7 +1,5 @@
 package com.example.weatherappwithkotlin.customenum
 
-import android.util.Log
-import android.widget.Toast
 import com.example.weatherappwithkotlin.R
 
 enum class ConditionWarning (private val code : List<Int>, private val message : String) {
