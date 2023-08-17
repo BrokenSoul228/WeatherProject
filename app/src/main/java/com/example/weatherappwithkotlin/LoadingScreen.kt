@@ -1,10 +1,13 @@
 package com.example.weatherappwithkotlin
 
+import android.content.ContentResolver
 import android.content.Context
 import android.net.ConnectivityManager
 import android.os.Build
 import android.os.Handler
 import android.os.HandlerThread
+import android.os.Looper
+import android.provider.Settings.Global.getString
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -16,6 +19,7 @@ import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.Fragment
+import kotlin.coroutines.coroutineContext
 
 class LoadingScreen(private val myActivity: Fragment) {
     private var dialog: AlertDialog? = null
@@ -33,38 +37,41 @@ class LoadingScreen(private val myActivity: Fragment) {
         val downSpeed = (nc?.linkDownstreamBandwidthKbps)?.div(1000)
         // UpSpeed  in MBPS
         val upSpeed = (nc?.linkUpstreamBandwidthKbps)
-        val connectivityManager = context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
-        val networkCapabilities = connectivityManager.getNetworkCapabilities(connectivityManager.activeNetwork)
-        val downloadSpeed = networkCapabilities?.linkDownstreamBandwidthKbps?.div(1000) // Convert speed from kbps to Mbps
         showDialog(context)
-        if ((upSpeed != null) && (upSpeed in 15000..49000)) {
-            Handler().postDelayed({
+        if ((downSpeed != null) && (downSpeed > 80)) {
+            Handler(Looper.getMainLooper()).postDelayed({
                 showButton()
-                Toast.makeText(context, "4G-", Toast.LENGTH_SHORT).show()
-            }, 3000) // Show button after 3 seconds for fast speeds
+                Toast.makeText(context, "", Toast.LENGTH_SHORT).show()
+            }, 2800) // Show button after 3 seconds for fast speeds
         }
-        else if(upSpeed in 50000..80000) {
-            Handler().postDelayed({
+        else if(downSpeed in 50..79) {
+            Handler(Looper.getMainLooper()).postDelayed({
                 showButton()
-                Toast.makeText(context, "LTE + 5g", Toast.LENGTH_SHORT).show()
-            }, 2800)
+                Toast.makeText(context, "", Toast.LENGTH_SHORT).show()
+            }, 3000)
         }
-        else if(upSpeed in 10000..14000) {
-            Handler().postDelayed({
+        else if(downSpeed in 20..49) {
+            Handler(Looper.getMainLooper()).postDelayed({
                 showButton()
-                Toast.makeText(context, "$upSpeed", Toast.LENGTH_SHORT).show()
+                Toast.makeText(context, "", Toast.LENGTH_SHORT).show()
             }, 3200)}
-        else if(upSpeed in 5000..9000) {
-            Handler().postDelayed({
+        else if(downSpeed in 10..19) {
+            Handler(Looper.getMainLooper()).postDelayed({
                 showButton()
-                Toast.makeText(context, "$upSpeed +1", Toast.LENGTH_SHORT).show()
-            }, 6000) // Show button after 5 seconds for slow speeds
+                Toast.makeText(context, "", Toast.LENGTH_SHORT).show()
+            }, 4000) // Show button after 5 seconds for slow speeds
+        }
+        else if(downSpeed in 3..9) {
+            Handler(Looper.getMainLooper()).postDelayed({
+                showButton()
+                Toast.makeText(context, "", Toast.LENGTH_SHORT).show()
+            }, 4500) // Show button after 5 seconds for slow speeds
         }
         else {
-            Handler().postDelayed({
+            Handler(Looper.getMainLooper()).postDelayed({
                 showButton()
-                Toast.makeText(context, "+1", Toast.LENGTH_SHORT).show()
-            }, 8000)
+                Toast.makeText(context, "So slow internet", Toast.LENGTH_SHORT).show()
+            }, 7000)
         }
     }
 
@@ -101,7 +108,7 @@ class LoadingScreen(private val myActivity: Fragment) {
         }
     }
 
-    fun dismissDialog() {
+    private fun dismissDialog() {
         dialog?.dismiss()
         dialog = null
     }
