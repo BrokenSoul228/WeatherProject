@@ -14,7 +14,9 @@ import android.widget.ArrayAdapter
 import android.widget.AutoCompleteTextView
 import android.widget.ImageView
 import android.widget.Spinner
+import android.widget.Switch
 import android.widget.TextView
+import android.widget.Toast
 import androidx.collection.arraySetOf
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.widget.doAfterTextChanged
@@ -125,7 +127,6 @@ class MainScreen : Fragment() {
         val list = arraySetOf<String>()
         val searchBarAdapter = ArrayAdapter(requireContext(), androidx.appcompat.R.layout.support_simple_spinner_dropdown_item, list.toMutableList())
 
-
         searchBar.setAdapter(searchBarAdapter)
         searchBar.doAfterTextChanged {
             retrofitHelper.getCityList(
@@ -167,7 +168,7 @@ class MainScreen : Fragment() {
                 position: Int,
                 id: Long
             ) {
-//                Toast.makeText(context, "Wait, do new request", Toast.LENGTH_SHORT).show()
+                Toast.makeText(context, "Wait, do new request", Toast.LENGTH_SHORT).show()
                 val selectedCity = popularCity[position]
                         retrofitHelper.getForecast(
                         selectedCity,
@@ -241,7 +242,6 @@ class MainScreen : Fragment() {
         text7.text = warning
         image.setImageResource(icon)
     }
-
 
     private fun initAll() {
         spinner = binding.itemSpinner

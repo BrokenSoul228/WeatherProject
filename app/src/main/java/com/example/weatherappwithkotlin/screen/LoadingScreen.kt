@@ -27,11 +27,8 @@ class LoadingScreen(private val myActivity: Fragment) {
     @SuppressLint("SetTextI18n")
     fun startLoadingDialog(context: Context) {
         val cm = context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
-        // Network Capabilities of Active Network
         val nc = cm.getNetworkCapabilities(cm.activeNetwork)
-        // DownSpeed in MBPS
         val downSpeed = (nc?.linkDownstreamBandwidthKbps)?.div(1000)
-        // UpSpeed  in MBPS
         val upSpeed = (nc?.linkUpstreamBandwidthKbps)
         showDialog(context)
         if ((downSpeed != null) && (downSpeed > 80)) {

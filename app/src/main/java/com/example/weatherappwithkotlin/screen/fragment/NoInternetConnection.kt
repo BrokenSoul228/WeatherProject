@@ -30,22 +30,22 @@ class NoInternetConnection : Fragment() {
                 transaction.remove(this@NoInternetConnection)
                 transaction.replace(R.id.nav_container, fragment).commit()
             } else {
-                showSnackbarWithSettingsButton()
+                showSnackBarWithSettingsButton()
             }
         }
         return view
     }
 
-    private fun showSnackbarWithSettingsButton() {
-        val snackbar = Snackbar.make(
+    private fun showSnackBarWithSettingsButton() {
+        val snackBar = Snackbar.make(
             requireView(),
             "No internet connection!",
             Snackbar.LENGTH_LONG
         )
-        snackbar.setAction("Settings") {
+        snackBar.setAction("Settings") {
             openPhoneSettings()
         }
-        snackbar.show()
+        snackBar.show()
     }
 
     private fun openPhoneSettings() {
