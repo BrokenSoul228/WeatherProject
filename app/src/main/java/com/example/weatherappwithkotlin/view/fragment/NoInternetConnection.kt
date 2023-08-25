@@ -1,4 +1,4 @@
-package com.example.weatherappwithkotlin.screen.fragment
+package com.example.weatherappwithkotlin.view.fragment
 
 import android.content.Context
 import android.content.Intent
@@ -12,7 +12,7 @@ import android.view.ViewGroup
 import android.widget.Button
 import androidx.fragment.app.Fragment
 import com.example.weatherappwithkotlin.R
-import com.example.weatherappwithkotlin.screen.MainScreen
+import com.example.weatherappwithkotlin.view.MainFragment
 import com.google.android.material.snackbar.Snackbar
 
 class NoInternetConnection : Fragment() {
@@ -25,7 +25,7 @@ class NoInternetConnection : Fragment() {
         val retryButton: Button = view.findViewById(R.id.RetryButton)
         retryButton.setOnClickListener {
             if (isInternetAvailable()) {
-                val fragment = MainScreen()
+                val fragment = MainFragment()
                 val transaction = requireActivity().supportFragmentManager.beginTransaction()
                 transaction.remove(this@NoInternetConnection)
                 transaction.replace(R.id.nav_container, fragment).commit()

@@ -11,9 +11,9 @@ import com.example.weatherappwithkotlin.R
 import com.example.weatherappwithkotlin.customenum.ConditionWarning.Forecast.Companion.getForecastCondition
 import com.example.weatherappwithkotlin.customenum.ConditionWarning.IconCollection.Companion.getIconCondition
 import com.example.weatherappwithkotlin.dto.forecast.ForecastDTO
-import com.example.weatherappwithkotlin.screen.ViewPagerListItem
-import com.example.weatherappwithkotlin.screen.fragment.DaysFragment
-import com.example.weatherappwithkotlin.screen.fragment.HoursFragment
+import com.example.weatherappwithkotlin.view.ViewPagerListItem
+import com.example.weatherappwithkotlin.view.fragment.DaysFragment
+import com.example.weatherappwithkotlin.view.fragment.HoursFragment
 import com.google.gson.Gson
 import java.util.*
 

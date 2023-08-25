@@ -5,8 +5,8 @@ import android.net.ConnectivityManager
 import android.net.Network
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
-import com.example.weatherappwithkotlin.screen.MainScreen
-import com.example.weatherappwithkotlin.screen.fragment.NoInternetConnection
+import com.example.weatherappwithkotlin.view.MainFragment
+import com.example.weatherappwithkotlin.view.fragment.NoInternetConnection
 
 class MainActivity : AppCompatActivity() {
 
@@ -23,7 +23,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun switchScreenNetwork() {
-        val fragment = if (networkConnection.isInternetAvailable()) MainScreen() else NoInternetConnection()
+        val fragment = if (networkConnection.isInternetAvailable()) MainFragment() else NoInternetConnection()
         supportFragmentManager.beginTransaction()
             .replace(R.id.MainScreenSwitcher, fragment)
             .commit()

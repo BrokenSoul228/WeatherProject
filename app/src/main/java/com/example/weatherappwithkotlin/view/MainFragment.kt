@@ -1,4 +1,4 @@
-package com.example.weatherappwithkotlin.screen
+package com.example.weatherappwithkotlin.view
 
 import android.annotation.SuppressLint
 import android.content.Context
@@ -14,7 +14,6 @@ import android.widget.ArrayAdapter
 import android.widget.AutoCompleteTextView
 import android.widget.ImageView
 import android.widget.Spinner
-import android.widget.Switch
 import android.widget.TextView
 import android.widget.Toast
 import androidx.collection.arraySetOf
@@ -29,8 +28,8 @@ import com.example.weatherappwithkotlin.databinding.ActivityMainScreenBinding
 import com.example.weatherappwithkotlin.databinding.SearchbarLayoutItemBinding
 import com.example.weatherappwithkotlin.dto.Constants
 import com.example.weatherappwithkotlin.retrofit.GettingDataFromRetrofit
-import com.example.weatherappwithkotlin.screen.fragment.DaysFragment
-import com.example.weatherappwithkotlin.screen.fragment.HoursFragment
+import com.example.weatherappwithkotlin.view.fragment.DaysFragment
+import com.example.weatherappwithkotlin.view.fragment.HoursFragment
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
 import com.google.android.material.tabs.TabLayout
@@ -38,7 +37,7 @@ import com.google.android.material.tabs.TabLayoutMediator
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 
-class MainScreen : Fragment() {
+class MainFragment : Fragment() {
     private lateinit var binding: ActivityMainScreenBinding
     private lateinit var informationTableContainer : ConstraintLayout
     private lateinit var searchBar: AutoCompleteTextView
@@ -96,7 +95,6 @@ class MainScreen : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val loadingScreen = LoadingScreen(this)
         val sharedPreferences = context?.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
 
         val hoursListJson = sharedPreferences?.getString(HOURS_LIST_KEY, null)
@@ -116,7 +114,6 @@ class MainScreen : Fragment() {
         )
         initAll()
         loadForecastData()
-        loadingScreen.startLoadingDialog(requireContext())
         val adapterOfCity = ArrayAdapter(requireContext(), androidx.constraintlayout.widget.R.layout.select_dialog_item_material, popularCity)
         adapterOfCity.notifyDataSetChanged()
         spinner.adapter = adapterOfCity
@@ -176,7 +173,7 @@ class MainScreen : Fragment() {
                         viewPager,
                         listOf(text1, text2, text3, text4, text5, text6, text7),
                         image,
-                        this@MainScreen,
+                        this@MainFragment,
                         requireContext()
                         )
             }

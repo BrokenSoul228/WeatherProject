@@ -5,7 +5,7 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.example.weatherappwithkotlin.databinding.LayoutItemBinding
-import com.example.weatherappwithkotlin.screen.ViewPagerListItem
+import com.example.weatherappwithkotlin.view.ViewPagerListItem
 
 class ViewPagerListAdapter : ListAdapter<ViewPagerListItem, ViewPagerListAdapter.LayoutItemHolder>(LayoutComparator()) {
 

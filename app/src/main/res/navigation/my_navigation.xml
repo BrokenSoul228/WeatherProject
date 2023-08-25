@@ -7,7 +7,7 @@
 
     <fragment
         android:id="@+id/noInternet"
-        android:name="com.example.weatherappwithkotlin.screen.fragment.NoInternetConnection"
+        android:name="com.example.weatherappwithkotlin.view.fragment.NoInternetConnection"
         android:label="fragment_no_internet2"
         tools:layout="@layout/fragment_no_internet2" >
         <action
@@ -17,6 +17,6 @@
     </fragment>
     <fragment
         android:id="@+id/mainScreen"
-        android:name="com.example.weatherappwithkotlin.screen.MainScreen"
+        android:name="com.example.weatherappwithkotlin.view.MainFragment"
         android:label="MainScreen" />
 </navigation>

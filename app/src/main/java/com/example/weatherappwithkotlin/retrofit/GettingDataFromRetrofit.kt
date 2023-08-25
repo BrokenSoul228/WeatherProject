@@ -19,25 +19,39 @@ import com.example.weatherappwithkotlin.customenum.ConditionWarning.Companion.ge
 import com.example.weatherappwithkotlin.customenum.ConditionWarning.Forecast.Companion.getForecastCondition
 import com.example.weatherappwithkotlin.dto.city.CityDTO
 import com.example.weatherappwithkotlin.dto.forecast.ForecastDTO
-import com.example.weatherappwithkotlin.screen.MainScreen
+import com.example.weatherappwithkotlin.view.LoadingDialog
+import com.example.weatherappwithkotlin.view.MainFragment
+import okhttp3.OkHttpClient
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import java.util.Calendar
+import java.util.Timer
+import java.util.TimerTask
+import java.util.concurrent.TimeUnit
+import kotlin.concurrent.timer
 
 class GettingDataFromRetrofit private constructor() {
 
     private var toastShow: Boolean = false
     private var toast: Toast? = null
+    private val timer = Timer()
+    private var client = OkHttpClient.Builder()
+        .connectTimeout(3, TimeUnit.SECONDS)
+        .readTimeout(3, TimeUnit.SECONDS)
+        .writeTimeout(3, TimeUnit.SECONDS)
+        .build()
     private val retrofitCityBuilder = Retrofit.Builder()
         .baseUrl("https://geocoding-api.open-meteo.com/")
         .addConverterFactory(GsonConverterFactory.create())
+        .client(client)
         .build()
     private val retrofitForecastBuilder = Retrofit.Builder()
         .baseUrl("https://api.open-meteo.com/")
         .addConverterFactory(GsonConverterFactory.create())
+        .client(client)
         .build()
     private val retrofitCity = retrofitCityBuilder.create(RetroFit::class.java)
     private val retrofitForecast = retrofitForecastBuilder.create(RetroFit::class.java)
@@ -51,7 +65,7 @@ class GettingDataFromRetrofit private constructor() {
             }
     }
 
-    fun showToastWithDelay(context: Context, message: String, delayMillis: Long) {
+    private fun showToastWithDelay(context: Context, message: String, delayMillis: Long) {
         if (!toastShow) {
             toastShow = true
             toast = Toast.makeText(context, message, Toast.LENGTH_SHORT)
@@ -102,7 +116,8 @@ class GettingDataFromRetrofit private constructor() {
             }
 
             override fun onFailure(call: Call<CityDTO>, t: Throwable) {
-                showToastWithDelay(requiredContext, message = "Internet problem", 1000)
+                call.cancel()
+                showToastWithDelay(requiredContext, message = "Internet problem", 0)
             }
         })
     }
@@ -113,14 +128,23 @@ class GettingDataFromRetrofit private constructor() {
         viewPager: ViewPager2,
         listOfTextView: List<TextView>,
         imageView: ImageView,
-        mainScreen: MainScreen,
+        mainFragment: MainFragment,
         context: Context
     ) {
         val json = retrofitCity.getCityJson(text)
         var cityDTO: CityDTO
-
+        val loadingDialog = LoadingDialog(mainFragment)
+        loadingDialog.startLoadingDialog()
+//        timer.cancel()
+//        timer.schedule(object : TimerTask(){
+//            override fun run() {
+//                json.cancel()
+//                showToastWithDelay(context, "Request is out", 0)
+//            }
+//        },3000)
         json.enqueue(object : Callback<CityDTO> {
             override fun onResponse(call: Call<CityDTO>, response: Response<CityDTO>) {
+//                timer.cancel()
                 if (response.isSuccessful) {
                     cityDTO = response.body()!!
                     if (cityDTO.results.isNotEmpty()) {
@@ -130,14 +154,16 @@ class GettingDataFromRetrofit private constructor() {
                             viewPager,
                             listOfTextView,
                             imageView,
-                            mainScreen,
+                            mainFragment,
                             context
                         )
                     }
+                    Handler(Looper.getMainLooper()).postDelayed({
+                        loadingDialog.dismissDialog()
+                    }, 1500)
                 }
             }
-
-            override fun onFailure(call: Call<CityDTO>, t: Throwable) {
+                override fun onFailure(call: Call<CityDTO>, t: Throwable) {
             }
         })
     }
@@ -148,12 +174,11 @@ class GettingDataFromRetrofit private constructor() {
         viewPager: ViewPager2,
         listOfTextView: List<TextView>,
         imageView: ImageView,
-        mainScreen: MainScreen,
+        mainFragment: MainFragment,
         context: Context
     ) {
         val json = retrofitForecast.getForecastJson(cityDto.results[0].latitude, cityDto.results[0].longitude)
         var forecastDTO: ForecastDTO
-
         json.enqueue(object : Callback<ForecastDTO> {
             override fun onResponse(call: Call<ForecastDTO>, response: Response<ForecastDTO>) {
                 if (response.isSuccessful) {
@@ -178,7 +203,7 @@ class GettingDataFromRetrofit private constructor() {
                         val currentHour = Calendar.getInstance().get(Calendar.HOUR_OF_DAY)
 
                         if (day == currentDay.toString() && hour == currentHour.toString()) {
-                            mainScreen.saveForecastData(
+                            mainFragment.saveForecastData(
                                 cityDto.results[0].name,
                                 getForecastCondition(forecastDTO.daily.weathercode[0]),
                                 forecastDTO.hourly.temperature_2m[index].toString() + "${
@@ -196,7 +221,8 @@ class GettingDataFromRetrofit private constructor() {
             }
 
             override fun onFailure(call: Call<ForecastDTO>, t: Throwable) {
-                Log.e("API Error", "Error occurred while fetching city list", t)
+                call.cancel()
+                showToastWithDelay(context, message = "Internet problem", 0)
             }
         })
     }

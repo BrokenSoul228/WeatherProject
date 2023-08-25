@@ -5,7 +5,7 @@
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:visibility="visible"
-    tools:context=".screen.fragment.HoursFragment">
+    tools:context=".view.fragment.HoursFragment">
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/days_switch_list"

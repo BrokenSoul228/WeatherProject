@@ -1,4 +1,4 @@
-package com.example.weatherappwithkotlin.screen.fragment
+package com.example.weatherappwithkotlin.view.fragment
 
 import ViewPagerListAdapter
 import android.os.Bundle
@@ -7,42 +7,40 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.example.weatherappwithkotlin.databinding.FragmentDaysBinding
-import com.example.weatherappwithkotlin.screen.ViewPagerListItem
-import java.util.Date
+import com.example.weatherappwithkotlin.databinding.FragmentHoursBinding
+import com.example.weatherappwithkotlin.view.ViewPagerListItem
 
-class DaysFragment(private val list: List<ViewPagerListItem>) : Fragment() {
+class HoursFragment(private val list: List<ViewPagerListItem>) : Fragment() {
 
-    private lateinit var binding: FragmentDaysBinding
+    private lateinit var binding: FragmentHoursBinding
     private lateinit var viewPagerListAdapter: ViewPagerListAdapter
     private val layoutManager: LinearLayoutManager by lazy { LinearLayoutManager(requireActivity()) }
-
-    private var isListRefreshed = true
-    private var lastUpdateTime: Long = 0
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        binding = FragmentDaysBinding.inflate(inflater, container, false)
-        lastUpdateTime = Date().time
-        fillRecycleList()
+        binding = FragmentHoursBinding.inflate(inflater, container, false)
         return binding.root
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        fillRecycleList()
     }
 
     private fun fillRecycleList() {
         with(binding) {
-            daysSwitchList.layoutManager = layoutManager
+            hoursSwitchList.layoutManager = layoutManager
             viewPagerListAdapter = ViewPagerListAdapter()
-            daysSwitchList.adapter = viewPagerListAdapter
+            hoursSwitchList.adapter = viewPagerListAdapter
             viewPagerListAdapter.submitList(list)
-            isListRefreshed = true
         }
     }
 
     companion object {
         @JvmStatic
         fun newInstance(list: List<ViewPagerListItem>) =
-            DaysFragment(list)
+            HoursFragment(list)
     }
 }
